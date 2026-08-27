@@ -1,79 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sai Harika Gade &middot; Research Data Analyst</title>
-    <meta name="description" content="Research Data Analyst specialising in healthcare data pipelines, dimensional modeling, and data validation.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sai Harika Gade &middot; Research Data Analyst</title>
+<meta name="description" content="Research Data Analyst building healthcare data pipelines and the validation suites that make their numbers trustworthy. SQL, dimensional modeling, HL7 v2.">
+<meta property="og:title" content="Sai Harika Gade &middot; Research Data Analyst">
+<meta property="og:description" content="Research Data Analyst building healthcare data pipelines and the validation suites that make their numbers trustworthy. SQL, dimensional modeling, HL7 v2.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232a78d6'/><text y='68' x='50' text-anchor='middle' font-size='52' font-family='monospace' font-weight='700' fill='white'>SG</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>
+/* Apply the stored theme before first paint so the page never flashes. */
+(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
 </head>
 <body>
-    <!-- Floating Elements -->
-    <div class="floating-element float-1"></div>
-    <div class="floating-element float-2"></div>
+<a class="skip-link" href="#main">Skip to content</a>
 
-    <nav id="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo gradient-text">SHG</a>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="experience.html">Experience</a></li>
-                <li><a href="projects.html">Projects</a></li>
-                <li><a href="skills.html">Skills</a></li>
-                <li><a href="contact.html">Contact</a></li>
+<header class="nav">
+    <div class="wrap nav__inner">
+        <a class="brand" href="index.html">
+            <span class="brand__mark" aria-hidden="true">SG</span>
+            <span>Sai Harika Gade</span>
+        </a>
+        <nav aria-label="Primary">
+            <ul class="nav__links" id="nav-links" data-open="false">
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
             </ul>
-            <a href="contact.html" class="nav-cta">Get in Touch</a>
+        </nav>
+        <div class="nav__actions">
+            <button class="icon-btn" data-theme-toggle type="button" aria-label="Switch theme">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+            </button>
+            <button class="icon-btn nav__toggle" data-nav-toggle type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+            <a class="btn btn--primary btn--sm nav__cta" href="index.html#contact">Get in touch</a>
         </div>
-    </nav>
+    </div>
+</header>
 
-    <main>
-        <section class="hero" id="home">
-            <div class="hero-content">
-                <h1 class="gradient-text">Sai Harika Gade</h1>
-                <p class="subtitle">Research Data Analyst &middot; M.S. Computer Science</p>
-                <p class="tagline">Healthcare Data &amp; EMR Analytics</p>
-
-                <div class="hero-description">
-                    I build healthcare data pipelines and the validation suites that make their
-                    numbers trustworthy &mdash; dimensional models, SQL reporting layers, and
-                    integrity checks that catch what a plausible-looking report hides.
-                </div>
-
-                <div class="hero-buttons">
-                    <a href="projects.html" class="btn btn-primary">
-                        View Projects
-                        <span>&rarr;</span>
-                    </a>
-                    <a href="contact.html" class="btn btn-secondary">
-                        Get in Touch
-                        <span>&#9993;&#65039;</span>
-                    </a>
-                </div>
+<main id="main">
+    <section class="hero">
+        <div class="wrap">
+            <p class="hero__status">Open to healthcare IT &amp; data analyst roles</p>
+            <h1>Sai&nbsp;Harika<br>Gade</h1>
+            <p class="hero__role">Research Data Analyst</p>
+            <p class="hero__lede">
+                I build healthcare data pipelines and the validation suites that decide whether their
+                numbers can be trusted. Three projects below; each one runs end to end from a clean
+                clone, and each one found a real bug while I was building it.
+            </p>
+            <div class="hero__cta">
+                <a class="btn btn--primary" href="#work">See the work</a>
+                <a class="btn btn--ghost" href="https://github.com/gadesaiharika" target="_blank" rel="noopener">GitHub</a>
+                <a class="btn btn--ghost" href="#contact">Contact</a>
             </div>
 
-            <div class="scroll-indicator">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 5v14M19 18l-7 7-7-7"/>
-                </svg>
+            <div class="stats reveal">
+            <div class="stat">
+                <div class="stat__value">237</div>
+                <div class="stat__label">automated checks across three repositories</div>
             </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Sai Harika Gade &middot; Healthcare data analytics</p>
+            <div class="stat">
+                <div class="stat__value">1,047<em>/1,047</em></div>
+                <div class="stat__label">injected HL7 faults detected</div>
+            </div>
+            <div class="stat">
+                <div class="stat__value">32 GB <em>&rarr;</em> &lt;1 GB</div>
+                <div class="stat__label">memory cut on a production research pipeline</div>
+            </div>
+            <div class="stat">
+                <div class="stat__value">3</div>
+                <div class="stat__label">repositories that run from a clean clone</div>
+            </div>
+            </div>
         </div>
-    </footer>
+    </section>
 
-    <script src="js/script.js"></script>
+    <hr class="rule">
+
+    <section id="work">
+        <div class="wrap">
+            <header class="section-head reveal">
+                <p class="eyebrow">Selected work</p>
+                <h2>Three projects, built to be run</h2>
+                <p class="lede">
+                    Not screenshots of dashboards. Each repository generates its own data, builds a
+                    warehouse, validates itself, and fails the build if a check does not pass.
+                </p>
+            </header>
+            <div class="work">
+            <article class="case reveal">
+                <div class="case__body">
+                    <div class="case__index">01 &mdash; When a lab result never posts, someone has to find out why. This is that tool.</div>
+                    <h3>HL7 v2 Interface Monitor</h3>
+                    <p class="case__sub">Parses live-shaped HL7 v2 traffic, validates it against 21 rules, and proves the validator itself works by injecting faults and reconciling every one back.</p>
+                    <div class="chips">
+                        <span class="chip chip--key">HL7 v2</span>
+                        <span class="chip">Python</span>
+                        <span class="chip">ADT / ORM / ORU</span>
+                        <span class="chip">Zero dependencies</span>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <div class="metric__value">1,047 / 1,047</div>
+                            <div class="metric__label">injected faults detected</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__value">21</div>
+                            <div class="metric__label">validation rules</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__value">173</div>
+                            <div class="metric__label">self-test checks</div>
+                        </div>
+                    </div>
+                    <div class="case__links">
+                        <a class="btn btn--primary btn--sm" href="work/hl7-interface-monitor.html">Read the case study</a>
+                        <a class="btn btn--ghost btn--sm" href="https://github.com/gadesaiharika/hl7-interface-monitor" target="_blank" rel="noopener">
+                            Source
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <figure class="case__figure">
+                    <img src="assets/interface_health.png" alt="Interface health: message volume, error rate by interface, and the failure reasons behind it." loading="lazy" width="1400" height="700">
+                    <figcaption>Interface health: message volume, error rate by interface, and the failure reasons behind it.</figcaption>
+                </figure>
+            </article>
+            <article class="case reveal">
+                <div class="case__body">
+                    <div class="case__index">02 &mdash; Hospitals lose up to 3% of Medicare payments to readmission penalties. This finds where.</div>
+                    <h3>30-Day Readmission Analytics</h3>
+                    <p class="case__sub">A Caboodle-style star schema over 12,000 synthetic inpatient encounters, with CMS HRRP cohort logic, Type 2 history, and 25 checks that guard the definition.</p>
+                    <div class="chips">
+                        <span class="chip chip--key">PostgreSQL</span>
+                        <span class="chip">SQL</span>
+                        <span class="chip">Python</span>
+                        <span class="chip">Tableau</span>
+                        <span class="chip">SCD Type 2</span>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <div class="metric__value">2.7s</div>
+                            <div class="metric__label">cold build, empty server</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__value">25</div>
+                            <div class="metric__label">validation checks</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__value">11,920</div>
+                            <div class="metric__label">encounters modelled</div>
+                        </div>
+                    </div>
+                    <div class="case__links">
+                        <a class="btn btn--primary btn--sm" href="work/hrrp-readmission-analytics.html">Read the case study</a>
+                        <a class="btn btn--ghost btn--sm" href="https://github.com/gadesaiharika/hrrp-readmission-analytics" target="_blank" rel="noopener">
+                            Source
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <figure class="case__figure">
+                    <img src="assets/readmission_by_cohort.png" alt="30-day readmission rate per HRRP cohort against the CMS national benchmark. Heart failure worst, elective joint replacement best &mdash; the published pattern." loading="lazy" width="1400" height="700">
+                    <figcaption>30-day readmission rate per HRRP cohort against the CMS national benchmark. Heart failure worst, elective joint replacement best &mdash; the published pattern.</figcaption>
+                </figure>
+            </article>
+            <article class="case reveal">
+                <div class="case__body">
+                    <div class="case__index">03 &mdash; Most denial dashboards report a rate above 90%. That number is wrong, and this explains why.</div>
+                    <h3>Revenue Cycle Denials &amp; AR</h3>
+                    <p class="case__sub">A three-grain billing warehouse over 85,000 claims and 480,000 remittance postings, with a CARC taxonomy that keeps the denial rate honest.</p>
+                    <div class="chips">
+                        <span class="chip chip--key">PostgreSQL</span>
+                        <span class="chip">SQL</span>
+                        <span class="chip">Python</span>
+                        <span class="chip">CARC / RARC</span>
+                        <span class="chip">KPI modelling</span>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <div class="metric__value">39</div>
+                            <div class="metric__label">validation checks</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__value">480k</div>
+                            <div class="metric__label">remittance postings</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric__value">to the cent</div>
+                            <div class="metric__label">financial identity asserted</div>
+                        </div>
+                    </div>
+                    <div class="case__links">
+                        <a class="btn btn--primary btn--sm" href="work/revenue-cycle-denials.html">Read the case study</a>
+                        <a class="btn btn--ghost btn--sm" href="https://github.com/gadesaiharika/revenue-cycle-denials" target="_blank" rel="noopener">
+                            Source
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <figure class="case__figure">
+                    <img src="assets/denial_pareto.png" alt="Denied dollars by reason code with the cumulative Pareto line. Red bars are denials a front-end or coding process could have prevented." loading="lazy" width="1400" height="700">
+                    <figcaption>Denied dollars by reason code with the cumulative Pareto line. Red bars are denials a front-end or coding process could have prevented.</figcaption>
+                </figure>
+            </article>
+            </div>
+        </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="experience">
+        <div class="wrap">
+            <header class="section-head reveal">
+                <p class="eyebrow">Experience</p>
+                <h2>Where I have worked</h2>
+            </header>
+            <div class="tl">
+                <div class="tl__item tl__item--now reveal">
+                    <div class="tl__head">
+                        <h3>Research Data Analyst, Poultry Science</h3>
+                        <span class="tl__when">Aug 2026 &ndash; Present</span>
+                    </div>
+                    <p class="tl__org">Mississippi State University &mdash; Dr. Li's Lab</p>
+                    <ul>
+                        <li>Re-architected a genomics analysis pipeline from a SLURM/HPC cluster to standard local workstations, cutting environment setup from a multi-day process to a single documented install.</li>
+                        <li>Quality-controlled 2M+ sequencing reads across 19 samples, reconciling per-species counts against filtered totals to confirm zero read loss.</li>
+                        <li>Validated output against an independent reference implementation to within 0.01 percentage points across all species- and genus-level estimates.</li>
+                        <li>Root-caused an intermittent failure discarding results after an hour of compute &mdash; host/guest clock drift, not the reported cause &mdash; and shipped a documented fix.</li>
+                        <li>Cut a taxonomy lookup's memory footprint from 32&nbsp;GB to under 1&nbsp;GB with a streaming filter, removed a 9&nbsp;GB external dependency, and merged 6 pull requests.</li>
+                    </ul>
+                </div>
+                <div class="tl__item reveal">
+                    <div class="tl__head">
+                        <h3>Graduate Teaching Assistant, Data Science</h3>
+                        <span class="tl__when">Jan 2025 &ndash; May 2026</span>
+                    </div>
+                    <p class="tl__org">Mississippi State University</p>
+                    <ul>
+                        <li>First-line technical support for 60+ students across Data Wrangling and Data Visualization, triaging SQL, Python, and Tableau issues and escalating unresolved cases to faculty.</li>
+                        <li>Reviewed and debugged 100+ student analytics projects, writing feedback on query correctness, data validation, and reproducibility.</li>
+                        <li>Taught joins, aggregations, dimensional modeling, and statistical inference to non-technical learners through plain-language walkthroughs and live code review.</li>
+                    </ul>
+                </div>
+                <div class="tl__item reveal">
+                    <div class="tl__head">
+                        <h3>Graduate Research Analyst, Healthcare Data Analytics</h3>
+                        <span class="tl__when">Aug 2024 &ndash; Dec 2024</span>
+                    </div>
+                    <p class="tl__org">Mississippi State University</p>
+                    <ul>
+                        <li>Analyzed public-health surveillance and clinical records with SQL and Python to identify disease transmission drivers, reporting findings to principal investigators.</li>
+                        <li>Automated ETL and data-transfer pipelines in Python, SQL, and Selenium between source systems and research databases.</li>
+                        <li>Implemented QA/QC validation and standardization protocols to keep records audit-ready under Good Clinical Practice (GCP).</li>
+                    </ul>
+                </div>
+                <div class="tl__item reveal">
+                    <div class="tl__head">
+                        <h3>Data Science &amp; Machine Learning Intern</h3>
+                        <span class="tl__when">Jan 2023 &ndash; May 2023</span>
+                    </div>
+                    <p class="tl__org">InfraBIM Techno Solutions &mdash; Hyderabad, India</p>
+                    <ul>
+                        <li>Integrated distributor, point-of-sale, and operations data from SQL Server and Excel into unified, analysis-ready datasets for inventory and assortment planning.</li>
+                        <li>Automated data preparation and validation in Python (Pandas, NumPy), cutting manual processing effort roughly 60% and shortening daily refresh cycles.</li>
+                        <li>Built K-Means store segmentation and baseline demand forecasts to flag slow-moving inventory.</li>
+                    </ul>
+                </div>
+                <div class="tl__item reveal">
+                    <div class="tl__head">
+                        <h3>Marketing Data Analyst Intern</h3>
+                        <span class="tl__when">May 2022 &ndash; Aug 2022</span>
+                    </div>
+                    <p class="tl__org">Viral Fission &mdash; Hyderabad, India</p>
+                    <ul>
+                        <li>Consolidated cross-channel campaign data from Instagram, YouTube, and Google Analytics into structured datasets covering reach, engagement, and conversion.</li>
+                        <li>Built recurring Excel and Google Data Studio KPI dashboards, reducing manual reporting effort.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="skills">
+        <div class="wrap">
+            <header class="section-head reveal">
+                <p class="eyebrow">Capabilities</p>
+                <h2>What I work with</h2>
+            </header>
+            <div class="skills">
+            <div class="skillset reveal">
+                <h3>SQL &amp; data modeling</h3>
+                <p>Where most of the work actually happens.</p>
+                <div class="chips">
+                    <span class="chip">PostgreSQL</span>
+                    <span class="chip">SQL Server</span>
+                    <span class="chip">T-SQL</span>
+                    <span class="chip">CTEs</span>
+                    <span class="chip">Window functions</span>
+                    <span class="chip">Query tuning</span>
+                    <span class="chip">Indexing</span>
+                    <span class="chip">Kimball dimensional modeling</span>
+                    <span class="chip">Star &amp; snowflake schemas</span>
+                    <span class="chip">Grain definition</span>
+                    <span class="chip">SCD Type 1 &amp; 2</span>
+                </div>
+            </div>
+            <div class="skillset reveal">
+                <h3>Healthcare data &amp; standards</h3>
+                <p>Learned from the published specifications and built against.</p>
+                <div class="chips">
+                    <span class="chip">Epic Clarity / Caboodle model</span>
+                    <span class="chip">ICD-10-CM/PCS</span>
+                    <span class="chip">CPT / HCPCS</span>
+                    <span class="chip">DRG</span>
+                    <span class="chip">CARC / RARC</span>
+                    <span class="chip">HL7 v2 (ADT, ORM, ORU)</span>
+                    <span class="chip">FHIR</span>
+                    <span class="chip">HIPAA Safe Harbor</span>
+                    <span class="chip">HRRP</span>
+                    <span class="chip">HEDIS</span>
+                    <span class="chip">MIPS</span>
+                </div>
+            </div>
+            <div class="skillset reveal">
+                <h3>Python</h3>
+                <p>For pipelines, validation, and anything that has to run twice the same way.</p>
+                <div class="chips">
+                    <span class="chip">Pandas</span>
+                    <span class="chip">NumPy</span>
+                    <span class="chip">SQLAlchemy</span>
+                    <span class="chip">psycopg2</span>
+                    <span class="chip">scikit-learn</span>
+                    <span class="chip">matplotlib</span>
+                    <span class="chip">Selenium</span>
+                </div>
+            </div>
+            <div class="skillset reveal">
+                <h3>BI &amp; reporting</h3>
+                <p>Definitions live in version-controlled SQL, not in the workbook.</p>
+                <div class="chips">
+                    <span class="chip">Tableau</span>
+                    <span class="chip">Power BI</span>
+                    <span class="chip">Excel (pivot tables, Power Query)</span>
+                    <span class="chip">KPI design</span>
+                    <span class="chip">Executive summaries</span>
+                </div>
+            </div>
+            <div class="skillset reveal">
+                <h3>Data integrity</h3>
+                <p>The part that decides whether a number can be trusted.</p>
+                <div class="chips">
+                    <span class="chip">Validation suites</span>
+                    <span class="chip">Reconciliation</span>
+                    <span class="chip">Referential integrity</span>
+                    <span class="chip">Root-cause analysis</span>
+                    <span class="chip">Regression testing</span>
+                    <span class="chip">Data dictionaries</span>
+                </div>
+            </div>
+            <div class="skillset reveal">
+                <h3>Ways of working</h3>
+                <p>How the work gets shipped and explained.</p>
+                <div class="chips">
+                    <span class="chip">Git &amp; pull-request review</span>
+                    <span class="chip">Technical documentation</span>
+                    <span class="chip">First-line support &amp; triage</span>
+                    <span class="chip">SDLC fundamentals</span>
+                    <span class="chip">Stakeholder communication</span>
+                </div>
+            </div>
+            </div>
+            <p class="note" style="margin-top:1.6rem;max-width:66ch">
+                I have studied Epic's publicly documented data model and built against it with
+                synthetic data. I have not worked in a production Epic environment, and nothing in this
+                portfolio uses real patient data.
+            </p>
+        </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="about">
+        <div class="wrap">
+            <header class="section-head reveal">
+                <p class="eyebrow">About</p>
+                <h2>Making data trustworthy</h2>
+            </header>
+            <div class="about">
+                <div class="about__text reveal">
+                    <p>
+                        I am a Research Data Analyst at Mississippi State University, working on genomics
+                        data pipelines in Dr.&nbsp;Li's lab. I hold an <strong>M.S. in Computer Science
+                        with a 4.0 GPA</strong>, with a focus on healthcare data analytics, dimensional
+                        modeling, and BI reporting.
+                    </p>
+                    <p>
+                        Most of what I do comes down to one thing. I re-architected a pipeline off an HPC
+                        cluster so it runs on a workstation, cut a step's memory footprint from 32&nbsp;GB
+                        to under 1&nbsp;GB, and root-caused an intermittent failure that had been quietly
+                        discarding an hour of compute per run &mdash; it turned out to be
+                        <strong>host/guest clock drift, not the cause that had been reported</strong>.
+                    </p>
+                    <p>
+                        My portfolio follows the same principle. A metric computed over a fact table that
+                        silently duplicated rows in a join is still a number, still plausible, and
+                        completely wrong. So every project ships with a validation suite, and the build
+                        fails when a check does. All three of them caught something real.
+                    </p>
+                </div>
+                <div>
+                    <div class="panel reveal">
+                        <h3>Education</h3>
+                        <p><strong>M.S. Computer Science</strong> &mdash; Mississippi State University,
+                        Starkville, MS &middot; 2024&ndash;2026 &middot; GPA 4.0</p>
+                        <p style="margin-top:.6rem"><strong>B.Tech Computer Science</strong> &mdash;
+                        Malla Reddy University, Hyderabad, India &middot; 2020&ndash;2024</p>
+                    </div>
+                    <div class="panel reveal">
+                        <h3>Publication</h3>
+                        <p>Computational Tools for Modeling Respiratory Disease Spread &mdash;
+                        <em>under review</em>. Co-authored the predictive data-modeling and
+                        computational-parallelization sections.</p>
+                        <cite>Li Zhang, Michael E. Navicky, Saikanth Ratnavale, Pavan Dharma Adapa,
+                        Sai Harika Gade</cite>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="contact">
+        <div class="wrap">
+            <header class="section-head reveal">
+                <p class="eyebrow">Contact</p>
+                <h2>Get in touch</h2>
+                <p class="lede">
+                    I am open to roles in healthcare IT, EMR and clinical application support, and
+                    healthcare data analytics.
+                </p>
+            </header>
+            <div class="contact-grid">
+            <a class="contact-card reveal" href="mailto:gadesaiharika@gmail.com">
+                <span class="contact-card__label">Email</span>
+                <span class="contact-card__value">gadesaiharika@gmail.com</span>
+            </a>
+            <a class="contact-card reveal" href="tel:+16624974248">
+                <span class="contact-card__label">Phone</span>
+                <span class="contact-card__value">+1 (662) 497-4248</span>
+            </a>
+            <a class="contact-card reveal" href="https://linkedin.com/in/saiharikagade" target="_blank" rel="noopener">
+                <span class="contact-card__label">LinkedIn</span>
+                <span class="contact-card__value">in/saiharikagade</span>
+            </a>
+            <a class="contact-card reveal" href="https://github.com/gadesaiharika" target="_blank" rel="noopener">
+                <span class="contact-card__label">GitHub</span>
+                <span class="contact-card__value">gadesaiharika</span>
+            </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="wrap footer__inner">
+        <p>&copy; <span data-year>2026</span> Sai Harika Gade &middot; Starkville, MS</p>
+        <div class="footer__links">
+            <a href="https://github.com/gadesaiharika" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://linkedin.com/in/saiharikagade" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="mailto:gadesaiharika@gmail.com">Email</a>
+        </div>
+    </div>
+</footer>
+
+<script src="js/script.js"></script>
 </body>
 </html>
