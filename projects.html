@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects - Sai Harika Gade</title>
+    <title>Projects &middot; Sai Harika Gade</title>
+    <meta name="description" content="Healthcare data engineering projects: HL7 v2 validation, HRRP readmission analytics, and revenue cycle denials.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,7 +15,6 @@
     <div class="floating-element float-1"></div>
     <div class="floating-element float-2"></div>
 
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo gradient-text">SHG</a>
@@ -35,108 +35,68 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main>
-        <!-- Projects Section -->
-        <section id="projects">
+        <section id="projects" class="page-content">
             <div class="container">
                 <h2 class="gradient-text">Projects</h2>
                 <div class="section-divider"></div>
 
+                <p style="max-width: 720px; margin: 0 auto 2.5rem; text-align: center; opacity: 0.85;">
+                    All three run end to end from a clean clone &mdash; no manual data downloads, no
+                    Docker. Each ships with a validation suite. All data is synthetic and contains no PHI.
+                </p>
+
                 <div class="projects-grid">
                     <div class="project-card">
-                        <div class="project-icon">📊</div>
-                        <h3>Credit Risk Assessment & EDA</h3>
-                        <p>
-                            Performed rigorous Exploratory Data Analysis on loan datasets using Python (Pandas, Seaborn, Matplotlib). 
-                            Identified key default indicators and recommended risk-threshold adjustments for lending strategies. 
-                            Created visualizations that revealed patterns in borrower behavior.
-                        </p>
+                        <div class="project-icon">&#128225;</div>
+                        <h3>HL7 v2 Interface Monitor</h3>
+                        <p>Parses HL7 v2 message traffic and validates it against 21 rules spanning message structure, the MSH header, patient and visit segments, and order and result segments. Severities map to what actually happens to a message: rejected outright, or filed anyway with a defect inside it. Verified by a 173-check self-test plus a generator-to-detector reconciliation reaching 1,047 of 1,047 injected faults detected.</p>
                         <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(139, 92, 246, 0.2);">
-                            <strong>Tech Stack:</strong> Python, Pandas, Seaborn, Matplotlib
+                            <strong>Stack:</strong> Python (standard library only) &middot; HL7 v2 &middot; synthetic, no PHI<br>
+                            <a href="https://github.com/gadesaiharika/hl7-interface-monitor" target="_blank" rel="noopener">
+                                github.com/gadesaiharika/hl7-interface-monitor &rarr;
+                            </a>
                         </div>
                     </div>
 
                     <div class="project-card">
-                        <div class="project-icon">👥</div>
-                        <h3>Customer Segmentation (RFM Analysis)</h3>
-                        <p>
-                            Analyzed global retailer transaction data using RFM (Recency, Frequency, Monetary) values. 
-                            Utilized K-Means Clustering to identify high-value customer segments for targeted retention campaigns. 
-                            Delivered actionable insights for marketing strategy optimization.
-                        </p>
+                        <div class="project-icon">&#128200;</div>
+                        <h3>30-Day Readmission Analytics &amp; HRRP Risk</h3>
+                        <p>A Caboodle-style star schema over 12,000 synthetic inpatient encounters, with 30-day all-cause readmissions flagged by LAG/LEAD window functions and stratified across the six CMS HRRP conditions. Slowly Changing Dimension Type 2 on the patient dimension, so a 2023 encounter stays joined to where that patient lived in 2023. 25 validation checks.</p>
                         <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(139, 92, 246, 0.2);">
-                            <strong>Tech Stack:</strong> Python, Scikit-learn, SQL, Pandas
+                            <strong>Stack:</strong> PostgreSQL &middot; SQL &middot; Python &middot; Tableau &middot; synthetic, non-PHI<br>
+                            <a href="https://github.com/gadesaiharika/hrrp-readmission-analytics" target="_blank" rel="noopener">
+                                github.com/gadesaiharika/hrrp-readmission-analytics &rarr;
+                            </a>
                         </div>
                     </div>
 
                     <div class="project-card">
-                        <div class="project-icon">📈</div>
-                        <h3>Global Retail Executive Dashboard</h3>
-                        <p>
-                            Designed an interactive Tableau dashboard connected to SQL database for real-time sales and profit margin tracking. 
-                            Implemented drill-down capabilities for regional analysis. Reduced reporting turnaround time by 30% 
-                            and improved decision-making speed for executives.
-                        </p>
+                        <div class="project-icon">&#128176;</div>
+                        <h3>Revenue Cycle Denials &amp; AR Analytics</h3>
+                        <p>A three-grain billing warehouse over 85,000 synthetic claims and 480,000 remittance postings, computing Denial Rate, First-Pass Yield, Net Collection Rate, and Days in AR. The CARC taxonomy separates true denials from contractual write-downs and patient responsibility &mdash; a distinction that moves the reported denial rate from over 90% to 11%. 39 validation checks, including the claim-level financial identity asserted to the cent.</p>
                         <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(139, 92, 246, 0.2);">
-                            <strong>Tech Stack:</strong> Tableau, SQL, Excel
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-icon">🔍</div>
-                        <h3>Bias Auditing Framework for Multimodal LLMs</h3>
-                        <p>
-                            Developing a comprehensive framework to audit social bias in Multimodal Large Language Models. 
-                            Integrating Knowledge Graphs (Wikidata) with neural embeddings to quantify bias. 
-                            Implementing statistical fairness metrics (WEAT, Demographic Parity) for high-stakes AI evaluation.
-                        </p>
-                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(139, 92, 246, 0.2);">
-                            <strong>Tech Stack:</strong> Python, PyTorch, Knowledge Graphs, NLP
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-icon">💾</div>
-                        <h3>Data Pipeline Optimization</h3>
-                        <p>
-                            Designed and implemented scalable ETL pipelines for large-scale data processing. 
-                            Optimized SQL queries and database indexing strategies. 
-                            Reduced data processing time by 50% through parallel processing and caching mechanisms.
-                        </p>
-                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(139, 92, 246, 0.2);">
-                            <strong>Tech Stack:</strong> Python, SQL, Apache Spark, AWS
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-icon">🤖</div>
-                        <h3>Machine Learning Model Deployment</h3>
-                        <p>
-                            Built and deployed classification models using Scikit-learn and TensorFlow. 
-                            Implemented model monitoring and retraining pipelines. 
-                            Achieved 94% accuracy on test datasets with comprehensive cross-validation.
-                        </p>
-                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(139, 92, 246, 0.2);">
-                            <strong>Tech Stack:</strong> Python, Scikit-learn, TensorFlow, Docker
+                            <strong>Stack:</strong> PostgreSQL &middot; SQL &middot; Python &middot; synthetic, non-PHI<br>
+                            <a href="https://github.com/gadesaiharika/revenue-cycle-denials" target="_blank" rel="noopener">
+                                github.com/gadesaiharika/revenue-cycle-denials &rarr;
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <div style="margin-top: 3rem; text-align: center;">
+                <div style="text-align:center; margin-top:2.5rem;">
                     <a href="skills.html" class="btn btn-primary">
                         View My Skills
-                        <span>→</span>
+                        <span>&rarr;</span>
                     </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>© 2026 Sai Harika Gade. Built with passion for data and AI.</p>
+            <p>&copy; 2026 Sai Harika Gade &middot; Healthcare data analytics</p>
         </div>
     </footer>
 

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experience - Sai Harika Gade</title>
+    <title>Experience &middot; Sai Harika Gade</title>
+    <meta name="description" content="Research, teaching, and analytics experience.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,7 +15,6 @@
     <div class="floating-element float-1"></div>
     <div class="floating-element float-2"></div>
 
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo gradient-text">SHG</a>
@@ -35,10 +35,8 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main>
-        <!-- Experience Section -->
-        <section id="experience">
+        <section id="experience" class="page-content">
             <div class="container">
                 <h2 class="gradient-text">Experience</h2>
                 <div class="section-divider"></div>
@@ -47,14 +45,15 @@
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
-                            <h3>Graduate Researcher (Bias Auditing & Multimodal AI)</h3>
-                            <p class="company">Mississippi State University</p>
-                            <p class="period">Aug 2025 – Present</p>
+                            <h3>Research Data Analyst, Poultry Science</h3>
+                            <p class="company">Mississippi State University &mdash; Dr. Li's Lab</p>
+                            <p class="period">Aug 2026 &ndash; Present</p>
                             <ul>
-                                <li>Developing a framework to audit social bias in Multimodal LLMs using Knowledge Graphs (Wikidata) and neural embeddings.</li>
-                                <li>Utilizing statistical fairness metrics (WEAT, Demographic Parity) to quantify bias in high-stakes AI models.</li>
-                                <li>Summarizing complex findings for academic and industry audiences.</li>
-                                <li>Collaborating with faculty to publish research in peer-reviewed venues.</li>
+                                <li>Re-architected a genomics analysis pipeline from a SLURM/HPC cluster to standard local workstations, cutting environment setup from a multi-day process to a single documented install.</li>
+                                <li>Quality-controlled 2M+ sequencing reads across 19 samples, reconciling per-species counts against filtered totals to confirm zero read loss.</li>
+                                <li>Validated output against an independent reference implementation to within 0.01 percentage points across all species- and genus-level estimates.</li>
+                                <li>Root-caused an intermittent failure discarding results after an hour of compute &mdash; host/guest clock drift, not the reported cause &mdash; and shipped a documented fix.</li>
+                                <li>Cut a taxonomy lookup's memory footprint from 32 GB to under 1 GB with a streaming filter, removed a 9 GB external dependency, and merged 6 pull requests covering packaging, error handling, and contributor tooling.</li>
                             </ul>
                         </div>
                     </div>
@@ -62,14 +61,13 @@
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
-                            <h3>Graduate Teaching Assistant (Data Science)</h3>
+                            <h3>Graduate Teaching Assistant, Data Science</h3>
                             <p class="company">Mississippi State University</p>
-                            <p class="period">Jan 2025 – Present</p>
+                            <p class="period">Jan 2025 &ndash; May 2026</p>
                             <ul>
-                                <li>Assisting in advanced coursework (Applied Data Science I & II).</li>
-                                <li>Conducting code reviews and QA for student Python projects, focusing on pipeline efficiency.</li>
-                                <li>Translating technical concepts for non-technical stakeholders.</li>
-                                <li>Mentoring students on best practices in data engineering and analysis.</li>
+                                <li>Served as first-line technical support for 60+ students across Data Wrangling and Data Visualization, triaging SQL, Python, and Tableau issues and escalating unresolved cases to faculty.</li>
+                                <li>Reviewed and debugged 100+ student analytics projects, writing feedback on query correctness, data validation, and reproducibility.</li>
+                                <li>Taught joins, aggregations, dimensional modeling, and statistical inference to non-technical learners through plain-language walkthroughs and live code review.</li>
                             </ul>
                         </div>
                     </div>
@@ -77,32 +75,58 @@
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
-                            <h3>Data Analytics Intern</h3>
-                            <p class="company">Tech Company</p>
-                            <p class="period">Jun 2024 – Aug 2024</p>
+                            <h3>Graduate Research Analyst, Healthcare Data Analytics</h3>
+                            <p class="company">Mississippi State University</p>
+                            <p class="period">Aug 2024 &ndash; Dec 2024</p>
                             <ul>
-                                <li>Analyzed customer behavior data using Python and SQL to identify trends.</li>
-                                <li>Created automated dashboards in Tableau for real-time business metrics.</li>
-                                <li>Optimized database queries, improving performance by 40%.</li>
+                                <li>Analyzed public-health surveillance and clinical records with SQL and Python to identify disease transmission drivers, reporting findings to principal investigators.</li>
+                                <li>Automated ETL and data-transfer pipelines in Python, SQL, and Selenium between source systems and research databases.</li>
+                                <li>Implemented QA/QC validation and standardization protocols to keep records audit-ready under Good Clinical Practice (GCP).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>Data Science &amp; Machine Learning Intern</h3>
+                            <p class="company">InfraBIM Techno Solutions &mdash; Hyderabad, India</p>
+                            <p class="period">Jan 2023 &ndash; May 2023</p>
+                            <ul>
+                                <li>Integrated distributor, point-of-sale, and operations data from SQL Server and Excel into unified, analysis-ready datasets for inventory and assortment planning.</li>
+                                <li>Automated data preparation and validation in Python (Pandas, NumPy), cutting manual processing effort roughly 60% and shortening daily refresh cycles.</li>
+                                <li>Built K-Means store segmentation and baseline demand forecasts to flag slow-moving inventory.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>Marketing Data Analyst Intern</h3>
+                            <p class="company">Viral Fission &mdash; Hyderabad, India</p>
+                            <p class="period">May 2022 &ndash; Aug 2022</p>
+                            <ul>
+                                <li>Consolidated cross-channel campaign data from Instagram, YouTube, and Google Analytics into structured datasets covering reach, engagement, and conversion.</li>
+                                <li>Built recurring Excel and Google Data Studio KPI dashboards, reducing manual reporting effort and improving metric visibility for planning.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <div style="margin-top: 3rem; text-align: center;">
+                <div style="text-align:center; margin-top:2.5rem;">
                     <a href="projects.html" class="btn btn-primary">
                         View My Projects
-                        <span>→</span>
+                        <span>&rarr;</span>
                     </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>© 2026 Sai Harika Gade. Built with passion for data and AI.</p>
+            <p>&copy; 2026 Sai Harika Gade &middot; Healthcare data analytics</p>
         </div>
     </footer>
 

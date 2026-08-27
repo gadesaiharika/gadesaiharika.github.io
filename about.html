@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Sai Harika Gade</title>
+    <title>About &middot; Sai Harika Gade</title>
+    <meta name="description" content="Research Data Analyst at Mississippi State University, M.S. Computer Science.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,7 +15,6 @@
     <div class="floating-element float-1"></div>
     <div class="floating-element float-2"></div>
 
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo gradient-text">SHG</a>
@@ -35,57 +35,80 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main>
-        <!-- About Section -->
-        <section id="about">
+        <section id="about" class="page-content">
             <div class="container">
                 <h2 class="gradient-text">About Me</h2>
                 <div class="section-divider"></div>
 
                 <div class="about-content">
-                    <div class="glass" style="padding: 2rem;">
-                        <p class="about-text">
-                            I am a Master's candidate at Mississippi State University with a 4.0 GPA and a strong foundation in Machine Learning and Data Analytics. I combine technical rigor with the communication skills of a technical mentor to deliver efficient, production-ready data solutions. My expertise lies in cleaning large-scale datasets, optimizing SQL queries, and developing frameworks for AI fairness.
+                    <div class="about-text">
+                        <p>
+                            I am a Research Data Analyst at Mississippi State University, where I work on
+                            genomics data pipelines in Dr. Li's lab. I hold an M.S. in Computer Science
+                            (4.0 GPA) with a focus on healthcare data analytics, dimensional modeling, and
+                            BI reporting.
                         </p>
-                        <p class="about-text">
-                            My journey in data science has been driven by a passion for understanding complex systems and translating them into actionable insights. Whether I'm auditing bias in multimodal AI models or optimizing data pipelines for performance, I approach each challenge with meticulous attention to detail and a commitment to excellence.
+                        <p>
+                            Most of what I do comes down to one thing: making data trustworthy. I
+                            re-architected a pipeline from an HPC cluster to standard workstations, cut a
+                            step's memory footprint from 32&nbsp;GB to under 1&nbsp;GB, and root-caused an
+                            intermittent failure that had been quietly discarding an hour of compute per
+                            run &mdash; it turned out to be host/guest clock drift, not the cause that had
+                            been reported.
+                        </p>
+                        <p>
+                            My portfolio projects follow the same principle. Each one ships with a
+                            validation suite, because a metric computed over a fact table that silently
+                            duplicated rows in a join is still a number, still plausible, and completely
+                            wrong. Every project runs end to end from a clean clone.
                         </p>
                     </div>
 
                     <div class="highlights">
-                        <div class="highlight-card">
-                            <div class="highlight-icon">🎓</div>
-                            <h3>4.0 GPA</h3>
-                            <p>Mississippi State University</p>
+                        <div class="highlight-card glass">
+                            <div class="highlight-icon">&#127891;</div>
+                            <h4>4.0 GPA</h4>
+                            <p>M.S. Computer Science, Mississippi State University</p>
                         </div>
-                        <div class="highlight-card">
-                            <div class="highlight-icon">🧠</div>
-                            <h3>AI Fairness</h3>
-                            <p>Bias Mitigation Research</p>
+                        <div class="highlight-card glass">
+                            <div class="highlight-icon">&#128295;</div>
+                            <h4>Data Integrity</h4>
+                            <p>Validation suites shipped with every project</p>
                         </div>
-                        <div class="highlight-card">
-                            <div class="highlight-icon">💾</div>
-                            <h3>Data Pipelines</h3>
-                            <p>Production-Ready Solutions</p>
+                        <div class="highlight-card glass">
+                            <div class="highlight-icon">&#127973;</div>
+                            <h4>Healthcare Focus</h4>
+                            <p>Epic-style data models, HL7 v2, CMS quality programs</p>
                         </div>
                     </div>
+                </div>
 
-                    <div style="margin-top: 3rem; text-align: center;">
-                        <a href="experience.html" class="btn btn-primary">
-                            View My Experience
-                            <span>→</span>
-                        </a>
-                    </div>
+                <div class="publications">
+                    <h3 class="gradient-text">Publication</h3>
+                    <p>
+                        <strong>Computational Tools for Modeling Respiratory Disease Spread</strong>
+                        &mdash; <em>under review</em><br>
+                        Li Zhang, Michael E. Navicky, Saikanth Ratnavale, Pavan Dharma Adapa,
+                        Sai Harika Gade<br>
+                        Co-authored the predictive data-modeling and computational-parallelization
+                        sections.
+                    </p>
+                </div>
+
+                <div style="text-align:center; margin-top:2.5rem;">
+                    <a href="experience.html" class="btn btn-primary">
+                        View My Experience
+                        <span>&rarr;</span>
+                    </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>© 2026 Sai Harika Gade. Built with passion for data and AI.</p>
+            <p>&copy; 2026 Sai Harika Gade &middot; Healthcare data analytics</p>
         </div>
     </footer>
 
