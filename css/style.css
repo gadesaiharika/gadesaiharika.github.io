@@ -21,7 +21,14 @@
   /* ink */
   --ink:          #0b0b0b;
   --ink-2:        #52514e;
-  --ink-muted:    #898781;
+  /* Darkened from #898781, which measured 2.7:1 to 3.5:1 against the light
+     surfaces it is actually used on — captions, labels, eyebrows, the footer —
+     and so failed WCAG AA (4.5:1) everywhere. #656359 is the lightest value
+     that clears 4.5 on all six light backgrounds, including the deepest one
+     (the chart well inside the feature band). The dark theme got the same
+     treatment in the other direction: #898781 -> #8e8c84 to clear --surface-2,
+     and a further lift inside the feature band, whose surfaces sit lighter. */
+  --ink-muted:    #656359;
 
   /* lines */
   --line:         #e1e0d9;
@@ -34,14 +41,34 @@
   --accent-soft:  rgba(42, 120, 214, 0.10);
   --accent-line:  rgba(42, 120, 214, 0.28);
   --verify:       #1baf7a;
+  --verify-ink:   #0f6b4a;
   --verify-soft:  rgba(27, 175, 122, 0.12);
+  --btn-bg:       #2470c9;
+  --btn-bg-hover: #184f95;
 
   --shadow-sm: 0 1px 2px rgba(11, 11, 11, .04), 0 2px 8px rgba(11, 11, 11, .04);
   --shadow-lg: 0 2px 4px rgba(11, 11, 11, .04), 0 12px 40px rgba(11, 11, 11, .08);
 
-  /* type */
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  /* charts — the SVGs in charts.py reference these and nothing else, so one
+     block restyles every chart and they stay legible inside the invert band */
+  --chart-ink:       #0b0b0b;
+  --chart-cap:       #656359;
+  --chart-line:      #dddcd4;
+  --chart-bg:        #fcfcfb;
+  --chart-muted:     #8a8880;
+  --chart-muted-bar: #b6b4aa;
+  --chart-1:         #2a78d6;
+  --chart-2:         #1baf7a;
+  --chart-warn:      #c9503a;
+
+  /* type
+     Display is a high-contrast serif, used only at h1/h2 sizes — it carries the
+     editorial voice. Everything structural (h3, h4, UI) is Inter, and every
+     number is mono. Three roles, no overlap, which is what keeps a serif from
+     reading as decoration. */
+  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
   --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-ui:      "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* fluid scale */
@@ -69,7 +96,7 @@
     --surface-sunk: #131312;
     --ink:          #ffffff;
     --ink-2:        #c3c2b7;
-    --ink-muted:    #898781;
+    --ink-muted:    #8e8c84;
     --line:         #2c2c2a;
     --line-strong:  #383835;
     --accent:       #3987e5;
@@ -77,9 +104,21 @@
     --accent-soft:  rgba(57, 135, 229, 0.14);
     --accent-line:  rgba(57, 135, 229, 0.34);
     --verify:       #199e70;
+    --verify-ink:   #2ec18d;
     --verify-soft:  rgba(25, 158, 112, 0.16);
+    --btn-bg:       #2470c9;
+    --btn-bg-hover: #1d5cab;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
     --shadow-lg: 0 2px 4px rgba(0, 0, 0, .3), 0 18px 50px rgba(0, 0, 0, .45);
+    --chart-ink:       #f2f1ed;
+    --chart-cap:       #918f88;
+    --chart-line:      #2f2f2c;
+    --chart-bg:        #1a1a19;
+    --chart-muted:     #8a8880;
+    --chart-muted-bar: #56554f;
+    --chart-1:         #4a92e8;
+    --chart-2:         #21b585;
+    --chart-warn:      #e0674e;
   }
 }
 
@@ -91,7 +130,7 @@
   --surface-sunk: #131312;
   --ink:          #ffffff;
   --ink-2:        #c3c2b7;
-  --ink-muted:    #898781;
+  --ink-muted:    #8e8c84;
   --line:         #2c2c2a;
   --line-strong:  #383835;
   --accent:       #3987e5;
@@ -99,9 +138,21 @@
   --accent-soft:  rgba(57, 135, 229, 0.14);
   --accent-line:  rgba(57, 135, 229, 0.34);
   --verify:       #199e70;
+  --verify-ink:   #2ec18d;
   --verify-soft:  rgba(25, 158, 112, 0.16);
+  --btn-bg:       #2470c9;
+  --btn-bg-hover: #1d5cab;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
   --shadow-lg: 0 2px 4px rgba(0, 0, 0, .3), 0 18px 50px rgba(0, 0, 0, .45);
+  --chart-ink:       #f2f1ed;
+  --chart-cap:       #918f88;
+  --chart-line:      #2f2f2c;
+  --chart-bg:        #1a1a19;
+  --chart-muted:     #8a8880;
+  --chart-muted-bar: #56554f;
+  --chart-1:         #4a92e8;
+  --chart-2:         #21b585;
+  --chart-warn:      #e0674e;
 }
 
 /* ---------- base -------------------------------------------------------- */
@@ -121,13 +172,36 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4 {
+/* Two heading voices, split by size rather than by level.
+
+   h1 and h2 are the display serif at its single available weight. A serif this
+   high-contrast only works large; below about 28px the thin strokes disappear,
+   which is exactly why h3/h4 are Inter instead. Trying to run one family across
+   the whole scale is what makes most serif sites look uneven. */
+h1, h2 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.022em;
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.012em;
   margin: 0;
   text-wrap: balance;
+}
+
+h3, h4 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.014em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* Numbers are the content here, so they get lining tabular figures everywhere.
+   Proportional digits make a column of metrics look ragged and a changing value
+   jitter — neither is acceptable on a page whose argument is precision. */
+.stat__value, .metric__value, .tl__when, .readout__value,
+td.num, th.num, .chip, .eyebrow, code, pre, .c-val {
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 p { margin: 0 0 1em; text-wrap: pretty; }
@@ -201,8 +275,8 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
 }
 
 .brand {
-  font-family: var(--font-display);
-  font-weight: 700; font-size: 1.02rem; letter-spacing: -.02em;
+  font-family: var(--font-ui);
+  font-weight: 600; font-size: .98rem; letter-spacing: -.018em;
   display: flex; align-items: center; gap: .6rem;
   margin-right: auto;
 }
@@ -259,9 +333,9 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
 }
 .btn:hover { transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
-.btn--primary { background: var(--accent); color: #fff; }
-.btn--primary:hover { background: var(--accent-ink); }
-[data-theme="dark"] .btn--primary:hover { background: #5598e7; }
+.btn--primary { background: var(--btn-bg); color: #fff; }
+.btn--primary:hover { background: var(--btn-bg-hover); }
+
 .btn--ghost { border-color: var(--line-strong); color: var(--ink); background: transparent; }
 .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
 .btn--sm { padding: .5rem .9rem; font-size: .88rem; }
@@ -281,7 +355,7 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   display: inline-flex; align-items: center; gap: .55rem;
   font-family: var(--font-mono); font-size: var(--step--1);
   padding: .38rem .82rem; border-radius: 99px;
-  background: var(--verify-soft); color: var(--verify);
+  background: var(--verify-soft); color: var(--verify-ink);
   border: 1px solid color-mix(in srgb, var(--verify) 25%, transparent);
   margin-bottom: 1.6rem;
 }
@@ -290,16 +364,20 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   background: var(--verify); flex: none;
 }
 
+/* Down one step from before. The name was 13% of the page height and carried
+   the least differentiated content on it; the readout beside it now earns that
+   space back with something a reader cannot get from a template. */
 .hero h1 {
-  font-size: var(--step-5);
-  letter-spacing: -0.035em;
-  margin-bottom: .55rem;
+  font-size: var(--step-4);
+  letter-spacing: -0.018em;
+  margin-bottom: .35rem;
 }
 .hero__role {
   font-family: var(--font-display);
-  font-size: var(--step-2); font-weight: 500;
-  color: var(--accent);
-  letter-spacing: -.02em;
+  font-size: var(--step-2); font-weight: 400;
+  font-style: italic;
+  color: var(--ink-2);
+  letter-spacing: 0;
   margin-bottom: 1.2rem;
 }
 .hero__lede {
@@ -319,10 +397,15 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   overflow: hidden;
 }
 .stat { background: var(--surface); padding: 1.5rem 1.4rem; }
+/* Headline figures are set in mono, not the display face. It is the difference
+   between a number that decorates and a number that reads as a measurement —
+   and mono is what makes the stat strip scan as a readout rather than a banner.
+   Sized below --step-2 because mono runs wider and these must not wrap. */
 .stat__value {
-  font-family: var(--font-display); font-size: var(--step-2);
-  font-weight: 600; letter-spacing: -.03em; line-height: 1.05;
-  margin-bottom: .35rem;
+  font-family: var(--font-mono);
+  font-size: clamp(1.18rem, 1.02rem + .52vw, 1.55rem);
+  font-weight: 500; letter-spacing: -.028em; line-height: 1.15;
+  margin-bottom: .45rem;
 }
 .stat__value em { font-style: normal; color: var(--ink-muted); font-weight: 400; }
 .stat__label { font-size: var(--step--1); color: var(--ink-2); line-height: 1.45; }
@@ -342,9 +425,18 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
 .case:hover { border-color: var(--line-strong); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
 
 .case__body { padding: clamp(1.6rem, 3vw, 2.5rem); display: flex; flex-direction: column; }
-.case__index {
-  font-family: var(--font-mono); font-size: var(--step--1);
-  color: var(--ink-muted); margin-bottom: .8rem; letter-spacing: .08em;
+/* The tagline is the hook for each project — the one line that says why the
+   thing exists. It was set in muted mono at caption size, which made the most
+   persuasive sentence on the card the hardest one to read, and wrapped it
+   across three ragged mono lines. Only the index number stays mono. */
+.case__kicker {
+  display: flex; gap: .72rem; align-items: baseline;
+  font-size: .93rem; line-height: 1.5; color: var(--ink-2);
+  margin: 0 0 1rem;
+}
+.case__num {
+  font-family: var(--font-mono); font-size: .74rem; font-weight: 500;
+  color: var(--accent-ink); letter-spacing: .06em; flex: none;
 }
 .case__body h3 { font-size: var(--step-2); margin-bottom: .7rem; }
 .case__sub { color: var(--ink-2); margin-bottom: 1.3rem; }
@@ -356,7 +448,11 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   background: var(--surface-2); color: var(--ink-2);
   border: 1px solid var(--line);
 }
-.chip--key { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+/* --accent, not --accent-ink, measured 3.6:1 against its own tinted background
+   in both themes — the accent is tuned to carry a solid button, not 12px text
+   on a 10% wash of itself. --accent-ink is the darker/lighter counterpart that
+   exists for exactly this. */
+.chip--key { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent-line); }
 
 .metrics {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -364,8 +460,9 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   padding-top: 1.3rem; border-top: 1px solid var(--line);
 }
 .metric__value {
-  font-family: var(--font-display); font-size: var(--step-1);
-  font-weight: 600; letter-spacing: -.02em; line-height: 1.1;
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, .93rem + .3vw, 1.16rem);
+  font-weight: 500; letter-spacing: -.025em; line-height: 1.2;
 }
 .metric__label {
   font-size: .74rem; color: var(--ink-muted); line-height: 1.35; margin-top: .2rem;
@@ -413,19 +510,36 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   font-family: var(--font-mono); font-size: var(--step--1);
   color: var(--ink-muted); white-space: nowrap;
 }
-.tl__org { color: var(--accent); font-size: .94rem; margin-bottom: .8rem; font-weight: 500; }
+.tl__org { color: var(--accent-ink); font-size: .94rem; margin-bottom: .8rem; font-weight: 500; }
 .tl__item ul { margin: 0; padding-left: 1.05rem; color: var(--ink-2); }
 .tl__item li { margin-bottom: .45rem; }
 .tl__item li::marker { color: var(--line-strong); }
 
-/* ---------- skills ------------------------------------------------------ */
-.skills { display: grid; gap: 1px; background: var(--line);
-  border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
-.skillset { background: var(--surface); padding: 1.7rem 1.5rem; }
-.skillset h3 { font-size: 1.02rem; margin-bottom: .35rem; }
-.skillset p { font-size: .86rem; color: var(--ink-muted); margin-bottom: 1rem; }
-.skillset .chips { margin-bottom: 0; }
+/* ---------- skills ------------------------------------------------------
+   Six bordered cards of tags became six rows separated by hairlines. Same
+   information, roughly half the height, and it reads as a specification sheet
+   instead of a tag cloud. The label column is fixed so every group's tags start
+   on the same axis — the alignment is what makes a long list scannable. */
+.skills { border-top: 1px solid var(--line); }
+.skillset {
+  display: grid;
+  grid-template-columns: minmax(0, 215px) minmax(0, 1fr);
+  gap: .4rem 2.2rem;
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+.skillset h3 { font-size: .95rem; margin-bottom: .28rem; }
+.skillset p {
+  font-size: .82rem; color: var(--ink-muted); margin: 0;
+  line-height: 1.45; max-width: 30ch;
+}
+.skillset .chips { margin-bottom: 0; gap: .35rem; }
+
+@media (max-width: 720px) {
+  .skillset { grid-template-columns: 1fr; gap: .7rem; padding: 1.15rem 0; }
+  .skillset p { max-width: none; }
+}
 
 /* ---------- about / publication ----------------------------------------- */
 .about { display: grid; gap: clamp(2rem, 5vw, 3.5rem); grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
@@ -526,6 +640,160 @@ figcaption { font-size: .82rem; color: var(--ink-muted); margin-top: .6rem; line
 .footer__links { display: flex; gap: 1.2rem; }
 .footer__links a { font-size: .87rem; color: var(--ink-2); transition: color .18s; }
 .footer__links a:hover { color: var(--accent); }
+
+/* ---------- feature band ------------------------------------------------
+   The page was one texture from top to bottom: off-white ground, white card,
+   hairline border, repeat, for seven thousand pixels. Clean, but with no
+   figure/ground change anywhere the eye has nothing to anchor on and the work
+   section — the part that should dominate — carried no more weight than the
+   footer.
+
+   The band fixes that by shifting the *ground*, not by inverting it. In light
+   mode it sinks to a warmer, deeper paper; in dark mode it lifts off the black.
+   Either way it reads as a different surface, and the text stays the same
+   colour it is everywhere else on the page — which is what an inverted band
+   could not do, and what made that version feel like a separate website
+   dropped into the middle of this one.
+
+   It works by redefining the *existing* tokens on the band rather than
+   restyling each component inside it. Cards, chips, metrics, buttons and charts
+   all follow automatically, so there is exactly one place to change and no way
+   for a child component to fall out of sync. Only surface and line tokens move;
+   ink, accent and the chart palette are deliberately left alone. */
+.band--feature {
+  --plane:        #edeae1;
+  --surface:      #f8f7f2;
+  --surface-2:    #e7e4d9;
+  --surface-sunk: #e4e0d5;
+  --line:         #d8d4c7;
+  --line-strong:  #c0bcac;
+
+  --chart-bg:     #f8f7f2;
+  --chart-line:   #d5d1c4;
+
+  background: var(--plane);
+}
+
+/* In dark mode a deeper ground would land on an already-black page and the
+   contrast move would vanish. So there it lifts instead of sinking — same
+   intent (this section is different), opposite direction. */
+:root[data-theme="dark"] .band--feature {
+  --plane:        #1a1a1d;
+  --surface:      #232327;
+  --surface-2:    #2b2b30;
+  --surface-sunk: #151517;
+  --line:         #35353b;
+  --line-strong:  #47474e;
+  --chart-bg:     #232327;
+  --chart-line:   #3a3a40;
+  /* The band's surfaces sit lighter than the page's, so the global dark
+     --ink-muted loses contrast against them (4.36:1 on the card). Lifted to
+     the lightest value that clears 4.5 on all four band surfaces. */
+  --ink-muted:    #94928a;
+  --chart-cap:    #94928a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .band--feature {
+    --plane:        #1a1a1d;
+    --surface:      #232327;
+    --surface-2:    #2b2b30;
+    --surface-sunk: #151517;
+    --line:         #35353b;
+    --line-strong:  #47474e;
+    --chart-bg:     #232327;
+    --chart-line:   #3a3a40;
+    --ink-muted:    #94928a;
+    --chart-cap:    #94928a;
+  }
+}
+
+/* The band spans the full viewport width while its contents stay on the grid.
+   Its own edges separate it from the sections either side, so build.py emits no
+   <hr> against it — doing that in markup rather than hiding rules in CSS keeps
+   one source of truth for where a separator exists. */
+.band { border-block: 1px solid var(--line); }
+
+/* ---------- charts -------------------------------------------------------
+   Text inside an SVG takes `fill`, not `color`, and does not inherit the
+   page's font stack — so every label class has to be declared here. Sizes are
+   in the chart's user units and scale with the viewBox. */
+.chart { width: 100%; height: auto; display: block; }
+.spark { width: 100%; max-width: 300px; height: auto; display: block; }
+
+.c-lbl    { font-family: var(--font-ui);   font-size: 13px; font-weight: 500; fill: var(--chart-ink); }
+.c-lbl-sm { font-family: var(--font-mono); font-size: 11px; font-weight: 500; fill: var(--chart-ink); }
+.c-val    { font-family: var(--font-mono); font-size: 13px; font-weight: 500; fill: var(--chart-ink);
+            font-variant-numeric: tabular-nums; }
+.c-cap    { font-family: var(--font-mono); font-size: 11px; font-weight: 400; fill: var(--chart-cap); }
+
+/* The figure panel holds a drawn chart now, not a screenshot, so it no longer
+   needs the sunken well that made a flat PNG look seated. */
+.case__figure--chart { justify-content: center; gap: 1rem; }
+
+/* ---------- hero readout -------------------------------------------------
+   A small instrument panel beside the introduction. Every value in it is read
+   out of a project's exported CSV at build time — including the sparkline —
+   so the first thing on the page is live evidence rather than an adjective. */
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: end;
+}
+@media (max-width: 900px) {
+  .hero__grid { grid-template-columns: 1fr; gap: 2.6rem; align-items: start; }
+}
+
+.readout {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.readout__head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: .8rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.readout__title {
+  font-family: var(--font-mono); font-size: .7rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-muted);
+}
+.readout__live {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--font-mono); font-size: .68rem; color: var(--verify-ink);
+}
+.readout__live::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--verify); flex: none;
+}
+.readout__spark { padding: 1rem 1.1rem .2rem; }
+.readout__scale {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: .68rem; color: var(--ink-muted);
+  padding: 0 1.1rem .9rem;
+}
+.readout__row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 1rem; padding: .65rem 1.1rem;
+  border-top: 1px solid var(--line);
+}
+.readout__key {
+  font-family: var(--font-mono); font-size: .72rem;
+  color: var(--ink-muted); letter-spacing: .02em;
+}
+.readout__value {
+  font-family: var(--font-mono); font-size: .86rem; font-weight: 500;
+  color: var(--ink); white-space: nowrap;
+}
+.readout__value b { font-weight: 500; color: var(--verify-ink); }
+.readout__foot {
+  padding: .7rem 1.1rem; border-top: 1px solid var(--line);
+  background: var(--surface-2);
+  font-size: .72rem; color: var(--ink-muted); line-height: 1.45;
+}
 
 /* ---------- reveal ------------------------------------------------------ */
 .reveal { opacity: 0; transform: translateY(14px); }

@@ -5,24 +5,63 @@ One shell, one content model, generated pages. Every number here is taken from
 a repo's actual run output — nothing is rounded up for effect.
 """
 
+import json
 import pathlib
 import shutil
+
+import charts
 
 ROOT = pathlib.Path(r"C:\Users\saiha\OneDrive\Desktop\Master Resume and prompt's\02_PROJECTS")
 SITE = pathlib.Path(__file__).resolve().parent
 GH = "https://github.com/gadesaiharika"
+SITE_URL = "https://gadesaiharika.github.io"
 
 NAV = [("#work", "Work"), ("#experience", "Experience"),
        ("#skills", "Skills"), ("#about", "About"), ("#contact", "Contact")]
 
+# Structured data, homepage only. Recruiters google the name before they call,
+# and this is what decides whether the result renders as a person or a URL.
+PERSON_LD = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sai Harika Gade",
+    "jobTitle": "Research Data Analyst",
+    "url": SITE_URL,
+    "email": "mailto:gadesaiharika@gmail.com",
+    "image": f"{SITE_URL}/assets/og-card.png",
+    "sameAs": [GH, "https://linkedin.com/in/saiharikagade"],
+    "worksFor": {"@type": "Organization", "name": "Mississippi State University"},
+    "alumniOf": [
+        {"@type": "CollegeOrUniversity", "name": "Mississippi State University"},
+        {"@type": "CollegeOrUniversity", "name": "Malla Reddy University"},
+    ],
+    "address": {"@type": "PostalAddress",
+                "addressLocality": "Starkville", "addressRegion": "MS",
+                "addressCountry": "US"},
+    "knowsAbout": ["Healthcare data analytics", "SQL", "Dimensional modeling",
+                   "HL7 v2", "Epic Clarity and Caboodle data model",
+                   "Revenue cycle analytics", "Data validation", "PostgreSQL",
+                   "Tableau", "Python"],
+}
 
-def shell(title, desc, body, depth=0):
-    """depth 0 = site root, 1 = /work/ — adjusts relative asset paths."""
+
+def shell(title, desc, body, depth=0, path="", ld=None):
+    """depth 0 = site root, 1 = /work/ — adjusts relative asset paths.
+
+    `path` is the page's location under the site root, used for the canonical
+    and og:url. Absolute, because a relative og:url is ignored by every
+    crawler that reads it.
+    """
     up = "../" * depth
     home = up + "index.html"
     nav_items = "\n".join(
         f'                    <li><a href="{home if depth else ""}{href}">{label}</a></li>'
         for href, label in NAV)
+    canonical = f"{SITE_URL}/{path}".rstrip("/")
+    ld_block = ("\n<script type=\"application/ld+json\">"
+                + json.dumps(ld, indent=None) + "</script>") if ld else ""
+    # Plain text for the card alt — og:image:alt is read aloud by screen readers
+    # on some platforms and shown when the image fails to load.
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,14 +69,28 @@ def shell(title, desc, body, depth=0):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
+<link rel="canonical" href="{canonical}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="website">
+<meta property="og:url" content="{canonical}">
+<meta property="og:site_name" content="Sai Harika Gade">
+<meta property="og:image" content="{SITE_URL}/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sai Harika Gade, Research Data Analyst. 237 automated checks, 1,047 of 1,047 injected HL7 faults detected, 3 repositories that run from a clean clone.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{SITE_URL}/assets/og-card.png">
+<meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232a78d6'/><text y='68' x='50' text-anchor='middle' font-size='52' font-family='monospace' font-weight='700' fill='white'>SG</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{up}css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{up}css/style.css">{ld_block}
+<noscript><style>.reveal{{opacity:1!important;transform:none!important}}</style></noscript>
 <script>
 /* Apply the stored theme before first paint so the page never flashes. */
 (function(){{try{{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}}})();
@@ -109,6 +162,9 @@ PROJECTS = [
         "img": "interface_health.png",
         "caption": "Interface health: message volume, error rate by interface, and the failure "
                    "reasons behind it.",
+        "chart_caption": "Rejected share of 20,000 messages, by interface. Radiology results reject "
+                         "more than six times as often as pharmacy orders &mdash; the split a single "
+                         "engine-wide error rate hides.",
         "tagline": "When a lab result never posts, someone has to find out why. This is that tool.",
         "sections": [
             ("The problem", """
@@ -174,7 +230,7 @@ structure and the failure modes.</li>
         "slug": "hrrp-readmission-analytics",
         "repo": "hrrp-readmission-analytics",
         "name": "30-Day Readmission Analytics",
-        "sub": "A Caboodle-style star schema over 12,000 synthetic inpatient encounters, with CMS "
+        "sub": "A Caboodle-style star schema over 11,920 synthetic inpatient encounters, with CMS "
                "HRRP cohort logic, Type 2 history, and 25 checks that guard the definition.",
         "chips": [("PostgreSQL", True), ("SQL", False), ("Python", False),
                   ("Tableau", False), ("SCD Type 2", False)],
@@ -184,6 +240,8 @@ structure and the failure modes.</li>
         "img": "readmission_by_cohort.png",
         "caption": "30-day readmission rate per HRRP cohort against the CMS national benchmark. "
                    "Heart failure worst, elective joint replacement best &mdash; the published pattern.",
+        "chart_caption": "Observed 30-day rate against the CMS national benchmark. The connector is "
+                         "the exposure: heart failure runs 5.9 points over, COPD 2.8 points under.",
         "tagline": "Hospitals lose up to 3% of Medicare payments to readmission penalties. This "
                    "finds where.",
         "sections": [
@@ -274,6 +332,8 @@ environment is involved.</li>
         "img": "denial_pareto.png",
         "caption": "Denied dollars by reason code with the cumulative Pareto line. Red bars are "
                    "denials a front-end or coding process could have prevented.",
+        "chart_caption": "Denied dollars by CARC code, with cumulative share. Prior authorisation "
+                         "alone is half of all denied dollars &mdash; and it is preventable.",
         "tagline": "Most denial dashboards report a rate above 90%. That number is wrong, and this "
                    "explains why.",
         "sections": [
@@ -328,8 +388,9 @@ loudly, which is the entire point.</p>"""),
 &mdash; modelling only the insurer understates it by the entire patient-responsibility share. And it is
 measured <strong>over adjudicated claims only</strong>; leaving in-flight claims in the denominator counts
 revenue that has not had a chance to be collected yet, and understates the rate every single month.</p>
-<p>87.64% against a 95% best-practice benchmark is not a bug in the model. It is the finding: roughly
-<strong>$57M of gap</strong> across the book, decomposing into denial write-offs, bad debt, and open AR.</p>"""),
+<p>87.64% against a 95% best-practice benchmark is not a bug in the model. It is the finding:
+<strong>$50.5M of gap</strong> across the book, decomposing into denial write-offs, bad debt, and
+open AR.</p>"""),
             ("What it found", """
 <ul>
 <li><strong>Claims filed late are denied 3.5&times; as often.</strong> Claims submitted 90+ days after
@@ -456,7 +517,7 @@ def home():
                         </div>""" for v, l in p["metrics"])
         cards.append(f"""            <article class="case reveal">
                 <div class="case__body">
-                    <div class="case__index">0{i} &mdash; {p['tagline']}</div>
+                    <p class="case__kicker"><span class="case__num">0{i}</span>{p['tagline']}</p>
                     <h3>{p['name']}</h3>
                     <p class="case__sub">{p['sub']}</p>
                     <div class="chips">
@@ -473,9 +534,9 @@ def home():
                         </a>
                     </div>
                 </div>
-                <figure class="case__figure">
-                    <img src="assets/{p['img']}" alt="{p['caption']}" loading="lazy" width="1400" height="700">
-                    <figcaption>{p['caption']}</figcaption>
+                <figure class="case__figure case__figure--chart">
+                    {charts.CHARTS[p['repo']]()}
+                    <figcaption>{p['chart_caption']}</figcaption>
                 </figure>
             </article>""")
 
@@ -490,9 +551,13 @@ def home():
                     </ul>
                 </div>""" for title, org, when, now, bullets in EXPERIENCE)
 
+    # h3 and blurb share the fixed label column, so they are wrapped together —
+    # otherwise the grid would drop the blurb into the tag column.
     skills = "\n".join(f"""            <div class="skillset reveal">
-                <h3>{name}</h3>
-                <p>{blurb}</p>
+                <div class="skillset__label">
+                    <h3>{name}</h3>
+                    <p>{blurb}</p>
+                </div>
                 <div class="chips">
 {chr(10).join(f'                    <span class="chip">{t}</span>' for t in tags)}
                 </div>
@@ -503,20 +568,57 @@ def home():
                 <span class="contact-card__value">{value}</span>
             </a>""" for label, value, href in CONTACT)
 
+    spark, lo, hi, days = charts.hl7_sparkline()
+    f = charts.hl7_facts()
+
     body = f"""    <section class="hero">
         <div class="wrap">
-            <p class="hero__status">Open to healthcare IT &amp; data analyst roles</p>
-            <h1>Sai&nbsp;Harika<br>Gade</h1>
-            <p class="hero__role">Research Data Analyst</p>
-            <p class="hero__lede">
-                I build healthcare data pipelines and the validation suites that decide whether their
-                numbers can be trusted. Three projects below; each one runs end to end from a clean
-                clone, and each one found a real bug while I was building it.
-            </p>
-            <div class="hero__cta">
-                <a class="btn btn--primary" href="#work">See the work</a>
-                <a class="btn btn--ghost" href="{GH}" target="_blank" rel="noopener">GitHub</a>
-                <a class="btn btn--ghost" href="#contact">Contact</a>
+            <div class="hero__grid">
+                <div class="hero__intro">
+                    <p class="hero__status">Open to healthcare IT &amp; data analyst roles</p>
+                    <h1>Sai&nbsp;Harika<br>Gade</h1>
+                    <p class="hero__role">Research Data Analyst</p>
+                    <p class="hero__lede">
+                        I build healthcare data pipelines and the validation suites that decide
+                        whether their numbers can be trusted. Three projects below; each one runs end
+                        to end from a clean clone, and each one found a real bug while I was
+                        building it.
+                    </p>
+                    <div class="hero__cta">
+                        <a class="btn btn--primary" href="#work">See the work</a>
+                        <a class="btn btn--ghost" href="{GH}" target="_blank" rel="noopener">GitHub</a>
+                        <a class="btn btn--ghost" href="#contact">Contact</a>
+                    </div>
+                </div>
+
+                <aside class="readout reveal" aria-label="Live figures from the HL7 interface monitor">
+                    <div class="readout__head">
+                        <span class="readout__title">hl7-interface-monitor</span>
+                        <span class="readout__live">last run</span>
+                    </div>
+                    <div class="readout__spark">{spark}</div>
+                    <div class="readout__scale">
+                        <span>{lo:.1f}%</span>
+                        <span>{days}-day rejection rate</span>
+                        <span>{hi:.1f}%</span>
+                    </div>
+                    <div class="readout__row">
+                        <span class="readout__key">messages parsed</span>
+                        <span class="readout__value">{f['messages']:,}</span>
+                    </div>
+                    <div class="readout__row">
+                        <span class="readout__key">rejected</span>
+                        <span class="readout__value">{f['rejected']:,} &middot; {f['rejection_pct']:.2f}%</span>
+                    </div>
+                    <div class="readout__row">
+                        <span class="readout__key">faults reconciled</span>
+                        <span class="readout__value"><b>1,047 / 1,047</b></span>
+                    </div>
+                    <div class="readout__foot">
+                        Read from <code>data/exports/</code> when this page was built &mdash; not
+                        typed in.
+                    </div>
+                </aside>
             </div>
 
             <div class="stats reveal">
@@ -525,9 +627,7 @@ def home():
         </div>
     </section>
 
-    <hr class="rule">
-
-    <section id="work">
+    <section id="work" class="band band--feature">
         <div class="wrap">
             <header class="section-head reveal">
                 <p class="eyebrow">Selected work</p>
@@ -542,8 +642,6 @@ def home():
             </div>
         </div>
     </section>
-
-    <hr class="rule">
 
     <section id="experience">
         <div class="wrap">
@@ -648,7 +746,7 @@ def home():
     return shell("Sai Harika Gade &middot; Research Data Analyst",
                  "Research Data Analyst building healthcare data pipelines and the validation "
                  "suites that make their numbers trustworthy. SQL, dimensional modeling, HL7 v2.",
-                 body, depth=0)
+                 body, depth=0, path="", ld=PERSON_LD)
 
 
 def case_study(p):
@@ -701,7 +799,8 @@ def case_study(p):
     </section>"""
 
     return shell(f"{p['name'].replace('&amp;', '&')} &middot; Sai Harika Gade",
-                 p["sub"].replace('"', "'"), body, depth=1)
+                 p["sub"].replace('"', "'"), body, depth=1,
+                 path=f"work/{p['slug']}.html")
 
 
 # ==========================================================================
@@ -710,10 +809,16 @@ if __name__ == "__main__":
     assets = SITE / "assets"
     assets.mkdir(exist_ok=True)
 
+    # The PNG dashboards still back the case-study pages. The homepage cards
+    # draw their own SVG from the exports instead.
     for p in PROJECTS:
         src = ROOT / p["repo"] / "docs" / p["img"]
         shutil.copy2(src, assets / p["img"])
         print(f"asset  {p['img']:<30} {src.stat().st_size // 1024:>5} KB")
+
+    import make_og
+    card = make_og.build()
+    print(f"asset  {card.name:<30} {card.stat().st_size // 1024:>5} KB")
 
     (SITE / "index.html").write_text(home(), encoding="utf-8")
     print("page   index.html")
