@@ -229,6 +229,7 @@ structure and the failure modes.</li>
     {
         "slug": "hrrp-readmission-analytics",
         "repo": "hrrp-readmission-analytics",
+        "live": "https://public.tableau.com/app/profile/sai.harika.gade/viz/HRRPReadmissionDashboard/Dashboard2",
         "name": "30-Day Readmission Analytics",
         "sub": "A Caboodle-style star schema over 11,920 synthetic inpatient encounters, with CMS "
                "HRRP cohort logic, Type 2 history, and 25 checks that guard the definition.",
@@ -513,6 +514,14 @@ CONTACT = [
 ]
 
 
+def live_btn(p):
+    """A "Live dashboard" button, only for projects that have a published viz."""
+    if not p.get("live"):
+        return ""
+    return (f'<a class="btn btn--ghost btn--sm" href="{p["live"]}" target="_blank" '
+            f'rel="noopener">Live dashboard</a>')
+
+
 def home():
     stats = "\n".join(f"""            <div class="stat">
                 <div class="stat__value">{v}</div>
@@ -541,6 +550,7 @@ def home():
                     </div>
                     <div class="case__links">
                         <a class="btn btn--primary btn--sm" href="work/{p['slug']}.html">Read the case study</a>
+                        {live_btn(p)}
                         <a class="btn btn--ghost btn--sm" href="{GH}/{p['repo']}" target="_blank" rel="noopener">
                             Source
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
@@ -783,6 +793,7 @@ def case_study(p):
                     View source
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
                 </a>
+                {live_btn(p)}
             </div>
         </div>
     </section>
@@ -806,6 +817,7 @@ def case_study(p):
             <hr class="rule" style="margin:3rem 0 2rem">
             <div class="case__links">
                 <a class="btn btn--primary btn--sm" href="{GH}/{p['repo']}" target="_blank" rel="noopener">View source</a>
+                {live_btn(p)}
                 <a class="btn btn--ghost btn--sm" href="../index.html#work">Other projects</a>
             </div>
         </div>
