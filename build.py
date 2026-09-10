@@ -366,7 +366,7 @@ denied.</p>
 <thead><tr><th>Counted as</th><th>Codes</th><th class="num">Reported denial rate</th></tr></thead>
 <tbody>
 <tr><td>Every adjustment code</td><td>all CARCs</td><td class="num">&gt; 90%</td></tr>
-<tr><td>True denials only</td><td>CO-16, CO-197, CO-50, &hellip;</td><td class="num"><strong>11.08%</strong></td></tr>
+<tr><td>True denials only</td><td>CO-16, CO-197, CO-50, &hellip;</td><td class="num"><strong>11.10%</strong></td></tr>
 </tbody></table></div>"""),
             ("Three grains, deliberately", """
 <div class="table-scroll"><table>
@@ -393,25 +393,42 @@ loudly, which is the entire point.</p>"""),
 <div class="table-scroll"><table>
 <thead><tr><th>Metric</th><th class="num">Result</th><th>Definition used</th></tr></thead>
 <tbody>
-<tr><td>Denial rate</td><td class="num">11.08%</td><td>True-denial claims / adjudicated claims</td></tr>
-<tr><td>First-pass yield</td><td class="num">88.92%</td><td>Paid on first submission / adjudicated</td></tr>
-<tr><td>Net collection rate</td><td class="num">87.64%</td><td>Payments / allowed, over adjudicated claims only</td></tr>
-<tr><td>Days in AR</td><td class="num">43.8</td><td>Open AR / average daily net revenue</td></tr>
+<tr><td>Denial rate</td><td class="num">11.10%</td><td>True-denial claims / adjudicated claims</td></tr>
+<tr><td>First-pass yield</td><td class="num">88.90%</td><td>Paid on first submission / adjudicated</td></tr>
+<tr><td>Net collection rate</td><td class="num">87.63%</td><td>Payments / allowed, over adjudicated claims only</td></tr>
+<tr><td>Days in AR</td><td class="num">44.2</td><td>Open AR / average daily net revenue</td></tr>
 </tbody></table></div>
 <p>Two definitional choices are load-bearing. <strong>Net collection includes what the patient pays</strong>
 &mdash; modelling only the insurer understates it by the entire patient-responsibility share. And it is
 measured <strong>over adjudicated claims only</strong>; leaving in-flight claims in the denominator counts
 revenue that has not had a chance to be collected yet, and understates the rate every single month.</p>
-<p>87.64% against a 95% best-practice benchmark is not a bug in the model. It is the finding:
+<p>87.63% against a 95% best-practice benchmark is not a bug in the model. It is the finding:
 <strong>$50.5M of gap</strong> across the book, decomposing into denial write-offs, bad debt, and
 open AR.</p>"""),
+            ("What the audit caught", """
+<p>Before the dashboard was built, the data was audited the way a dashboard audits it &mdash; by
+looking for numbers that should agree and cells that should not exist. All 39 checks were passing.
+The audit still found three problems.</p>
+<ul>
+<li><strong>The documented formula was wrong.</strong> The README said <code>AVG(denied)</code> was the
+denial rate. It read 10.8% against the true 11.1%, and <code>AVG(appealed)</code> read 7% against a true
+appeal rate of 66%, because claims with no outcome yet were averaged in as zeros. Each flag is now NULL
+outside its own population, and a check tests the formula readers are told to use &mdash; not the one
+only the author knew.</li>
+<li><strong>The late-filing figure mixed denominators.</strong> It divided by all claims, including those
+still in process &mdash; 13% of late-filed claims against 3% of the rest, so the late bucket was
+understated most. Corrected, the finding got stronger: nearly 4&times;, not 3.5&times;.</li>
+<li><strong>A cell that should not exist.</strong> 61 timely-filing denials sat on claims filed within 30
+days of service; no payer&rsquo;s window is that short. The check that replaced it had been unable to
+fail &mdash; it tested that a three-branch <code>CASE</code> returned one of its own three values.</li>
+</ul>"""),
             ("What it found", """
 <ul>
-<li><strong>Claims filed late are denied 3.5&times; as often.</strong> Claims submitted 90+ days after
-service deny at 36.3% against a baseline near 10% &mdash; and charge lag is a process problem, not a
+<li><strong>Claims filed late are denied nearly 4&times; as often.</strong> Claims submitted 90+ days after
+service deny at 41.5% against 10.6% for everything filed sooner &mdash; and charge lag is a process problem, not a
 payer problem.</li>
-<li><strong>A blended denial rate hides the spread.</strong> One payer denies at more than twice
-Medicare's 8.3% and collects 82.6% against Medicare's 90.8%. The blended number describes no
+<li><strong>A blended denial rate hides the spread.</strong> Medicaid denies at nearly twice
+Medicare's 8.3% and collects 85.7% against Medicare's 92.8%. The blended number describes no
 individual payer.</li>
 <li><strong>The work queue should rank by recoverable dollars, not claim count.</strong> The
 highest-volume denial reason is rarely the highest-value one; <code>vw_recovery_opportunity</code>
