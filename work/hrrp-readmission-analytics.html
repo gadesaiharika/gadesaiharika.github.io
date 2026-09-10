@@ -144,6 +144,16 @@ returned a different population than the headline rate &mdash; the kind of discr
 as "these two numbers don't match" and is miserable to trace after the fact.</p>
 <p>Both now derive from one calendar-day delta, which also matches the CMS definition: the 30th
 calendar day counts regardless of what hour either event happened at.</p>
+<h2>A bug the checks missed</h2>
+<p>All 25 checks passed while half of COPD was being filed as &ldquo;All other inpatient.&rdquo; The
+classifier matched <code>'%chronic bronchitis%'</code>; the diagnosis text read &ldquo;Chronic
+<em>obstructive</em> bronchitis,&rdquo; and the word in the middle broke the match. COPD reported 89
+admissions at 16.9%, below its benchmark, when the true figure was 176 at 25.0%, above it.</p>
+<p>The Tableau heatmap exposed it: 87 &ldquo;All other&rdquo; admissions sitting in Pulmonology at 33.3%,
+a combination the data should not produce. A range check on cohort share had passed at 55.7%, and the
+check meant to guard classification could never fail &mdash; the column is <code>NOT NULL</code> and the
+ETL defaults to <code>OTHER</code>. It is replaced by a check that fails with exactly those 87 rows
+against the old build and passes against the fixed one.</p>
 <h2>Why Type 2 history</h2>
 <p><code>DimPatient</code> versions on address change, so an encounter from 2023 stays joined to where
 that patient lived in 2023. Without it, last quarter's regional numbers silently restate every time
@@ -161,6 +171,9 @@ real changed data rather than asserted in a comment.</p>
 <ul>
 <li><strong>Heart failure is the dominant exposure</strong> &mdash; 27.4% against a 21.5% benchmark,
 and the largest denominator among the named cohorts, so intervention pays back most there.</li>
+<li><strong>COPD is the second exposure, and it was hiding</strong> &mdash; 25.0% on 176 admissions
+against a 19.6% benchmark. An earlier build showed it at 16.9% and below benchmark, because the
+classifier was missing half its admissions.</li>
 <li><strong>Medicare readmits at 18.5% against 14.4% commercial</strong> &mdash; a 4.2-point gap in
 precisely the population HRRP measures.</li>
 <li><strong>Case-mix adjustment reorders the provider list.</strong> Ranking on raw rate just finds
