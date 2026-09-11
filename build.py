@@ -208,13 +208,15 @@ everything.</strong> So there are two independent checks, and the build fails if
 message that would otherwise be clean, and the suite asserts that the specific expected rule fires
 &mdash; not merely that <em>something</em> fired.</p>
 <p><strong>Reconciliation &mdash; 1,047 of 1,047.</strong> The generator records every fault it injects
-across 20,000 messages. The validator runs blind. The two ledgers are then compared: every injected
-fault must be detected, and detections must not exceed injections. Both directions matter &mdash; a
-validator that flags everything would pass the first check and fail the second.</p>
+across 20,000 messages. The validator runs blind. The two ledgers are then compared in both
+directions: every injected fault must surface as its expected rule, and every message the generator
+left alone must produce no findings at all. Both directions matter &mdash; a validator that flags
+everything would pass the first check and fail the second.</p>
 <pre><code>[1/5] Validator self-test          173 passed, 0 failed
 [2/5] Generating 20,000 messages   1,047 faults injected
 [3/5] Validating
-      reconciliation: 1,047/1,047 injected faults detected (100.0%)  [OK]</code></pre>"""),
+      reconciliation: 1,047/1,047 injected faults detected (100.0%)  [OK]
+                      0 of 18,953 fault-free messages flagged        [OK]</code></pre>"""),
             ("Honest scope", """
 <ul>
 <li>Synthetic messages. No PHI, and nothing derived from a real feed.</li>
