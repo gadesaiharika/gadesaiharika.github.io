@@ -335,6 +335,7 @@ environment is involved.</li>
     {
         "slug": "revenue-cycle-denials",
         "repo": "revenue-cycle-denials",
+        "live": "https://public.tableau.com/app/profile/sai.harika.gade/viz/RevenueCycleDenialsAR/Dashboard1",
         "name": "Revenue Cycle Denials &amp; AR",
         "sub": "A three-grain billing warehouse over 85,000 claims and 480,000 remittance postings, "
                "with a CARC taxonomy that keeps the denial rate honest.",
