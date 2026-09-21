@@ -450,6 +450,7 @@ capitation.</li>
     {
         "slug": "complaint-resolution-analytics",
         "repo": "complaint-resolution-analytics",
+        "live": "https://public.tableau.com/app/profile/sai.harika.gade/viz/ConsumerComplaintResolution/Dashboard1",
         "name": "Consumer Complaint Resolution",
         "sub": "17.9 million real CFPB complaints, mapped across two federal category renames, "
                "with the denominators that make a company comparison mean anything.",
