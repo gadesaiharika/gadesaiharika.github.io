@@ -549,10 +549,10 @@ rate.</li>
 # Home page
 # ==========================================================================
 STATS = [
-    ("237", "automated checks across three repositories"),
+    ("261", "automated checks across four repositories"),
     ("1,047<em>/1,047</em>", "injected HL7 faults detected"),
     ("32 GB <em>&rarr;</em> &lt;1 GB", "memory cut on a production research pipeline"),
-    ("3", "repositories that run from a clean clone"),
+    ("4", "repositories that run from a clean clone"),
 ]
 
 EXPERIENCE = [
@@ -717,9 +717,10 @@ def home():
                     <h1>Sai&nbsp;Harika<br>Gade</h1>
                     <p class="hero__role">Research Data Analyst</p>
                     <p class="hero__lede">
-                        I build healthcare data pipelines and the validation suites that decide
-                        whether their numbers can be trusted. Three projects below; each one runs end
-                        to end from a clean clone, and each one found a real bug while I was
+                        I build data pipelines and the validation suites that decide whether
+                        their numbers can be trusted &mdash; three on healthcare data, one on 17.9
+                        million real consumer complaints. Four projects below; each one runs end to
+                        end from a clean clone, and each one found a real defect while I was
                         building it.
                     </p>
                     <div class="hero__cta">
@@ -769,10 +770,11 @@ def home():
         <div class="wrap">
             <header class="section-head reveal">
                 <p class="eyebrow">Selected work</p>
-                <h2>Three projects, built to be run</h2>
+                <h2>Four projects, built to be run</h2>
                 <p class="lede">
-                    Not screenshots of dashboards. Each repository generates its own data, builds a
-                    warehouse, validates itself, and fails the build if a check does not pass.
+                    Not screenshots of dashboards. Each repository builds its own warehouse
+                    &mdash; three from a seeded generator, one from a federal public file it
+                    downloads &mdash; validates itself, and fails the build if a check does not pass.
                 </p>
             </header>
             <div class="work">
