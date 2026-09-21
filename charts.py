@@ -291,10 +291,79 @@ def hl7_facts():
     }
 
 
+# ==========================================================================
+# 4. CFPB — monetary relief rate by product
+# ==========================================================================
+def complaint_relief(n=8):
+    """Horizontal bars, one per product, sorted by monetary relief rate.
+
+    The story is the bottom bar, not the top one. Credit reporting is 81.75%
+    of every complaint in the file and closes with money 0.05% of the time,
+    which is why the overall 1.28% rate describes no company's behaviour.
+    """
+    rows = _read("complaint-resolution-analytics", "product_summary.csv")
+    rows = [r for r in rows if r["monetary_relief_rate_pct"]
+            and int(r["complaints"]) >= 10_000]
+    rows.sort(key=lambda r: float(r["monetary_relief_rate_pct"]), reverse=True)
+    rows = rows[: n - 1] + [rows[-1]] if len(rows) > n else rows
+
+    short = {
+        "Credit reporting or other personal consumer reports": "Credit reporting",
+        "Payday loan, title loan, personal loan, or advance loan": "Payday / title loan",
+        "Money transfer, virtual currency, or money service": "Money transfer",
+        "Credit card or prepaid card": "Credit card",
+        "Checking or savings account": "Checking / savings",
+        "Debt or credit management": "Debt management",
+        "Vehicle loan or lease": "Vehicle loan",
+    }
+
+    pad_l, pad_r, pad_t = 132, 62, 26
+    row_h, gap = 30, 8
+    vb_w = 600
+    vb_h = pad_t + len(rows) * (row_h + gap) + 26
+    span = vb_w - pad_l - pad_r
+    top = max(float(r["monetary_relief_rate_pct"]) for r in rows)
+    scale = span / (top * 1.12)
+
+    out = [_open(vb_w, vb_h, "Monetary relief rate by product",
+                 "Credit card complaints close with money 16.7 percent of the time. "
+                 "Credit reporting, which is 82 percent of all complaints, does so "
+                 "0.05 percent of the time.")]
+
+    y_end = pad_t + len(rows) * (row_h + gap) - gap
+    out.append(f'<line x1="{pad_l}" y1="{pad_t - 8}" x2="{pad_l}" y2="{y_end}" '
+               f'stroke="var(--chart-line, #d8d7d0)" stroke-width="1"/>')
+
+    for i, r in enumerate(rows):
+        y = pad_t + i * (row_h + gap)
+        pct = float(r["monetary_relief_rate_pct"])
+        w = max(pct * scale, 2)
+        label = short.get(r["product_std"], r["product_std"])
+        # The finding is the category that dominates the file and pays least.
+        col = ("var(--chart-warn, #d4573f)" if label == "Credit reporting"
+               else "var(--chart-1, #2a78d6)")
+
+        out.append(
+            f'<text x="{pad_l - 12}" y="{y + row_h / 2 + 4}" text-anchor="end" '
+            f'class="c-lbl">{_esc(label)}</text>'
+            f'<rect x="{pad_l + 1}" y="{y + 4}" width="{w:.1f}" height="{row_h - 8}" '
+            f'rx="2" fill="{col}"/>'
+            f'<text x="{pad_l + w + 9:.1f}" y="{y + row_h / 2 + 4}" '
+            f'class="c-val">{pct:.2f}%</text>')
+
+    total = sum(int(r["complaints"]) for r in _read(
+        "complaint-resolution-analytics", "product_summary.csv"))
+    out.append(f'<text x="{pad_l}" y="{vb_h - 6}" class="c-cap">'
+               f'closed with monetary relief, of {total:,} complaints</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
 CHARTS = {
     "hl7-interface-monitor": hl7_interfaces,
     "hrrp-readmission-analytics": hrrp_cohorts,
     "revenue-cycle-denials": denial_pareto,
+    "complaint-resolution-analytics": complaint_relief,
 }
 
 

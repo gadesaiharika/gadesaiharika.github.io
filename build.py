@@ -447,6 +447,101 @@ capitation.</li>
 </ul>"""),
         ],
     },
+    {
+        "slug": "complaint-resolution-analytics",
+        "repo": "complaint-resolution-analytics",
+        "name": "Consumer Complaint Resolution",
+        "sub": "17.9 million real CFPB complaints, mapped across two federal category renames, "
+               "with the denominators that make a company comparison mean anything.",
+        "chips": [("PostgreSQL", True), ("SQL", False), ("Python", False),
+                  ("Real public data", False), ("Taxonomy mapping", False)],
+        "metrics": [("17.9M", "real complaints"),
+                    ("24", "validation checks"),
+                    ("762s", "fact build, 18M rows")],
+        "img": "monetary_relief_by_product.png",
+        "caption": "Share of complaints closed with monetary relief, by product. Credit reporting "
+                   "is 81.75% of the file and pays out in about one case in 2,000.",
+        "chart_caption": "Monetary relief rate by product. The category that dominates the file "
+                         "pays the least &mdash; which is why the headline rate misleads.",
+        "tagline": "Everyone ranks companies by complaint count. That ranking is meaningless, and "
+                   "this is the project that shows why.",
+        "sections": [
+            ("The rename that erases a category", """
+<div class="callout"><p><strong>The CFPB renamed its product categories twice, in April 2017 and
+August 2023. Both are hard cutovers: the old label stops the day the new one starts.</strong></p></div>
+<div class="table-scroll"><table>
+<thead><tr><th>Month</th><th class="num">&ldquo;Credit reporting, credit repair services, &hellip;&rdquo;</th><th class="num">&ldquo;Credit reporting or other personal consumer reports&rdquo;</th></tr></thead>
+<tbody>
+<tr><td>Jul 2023</td><td class="num">87,022</td><td class="num">&mdash;</td></tr>
+<tr><td><strong>Aug 2023</strong></td><td class="num"><strong>77,309</strong></td><td class="num"><strong>20,736</strong></td></tr>
+<tr><td>Sep 2023</td><td class="num">&mdash;</td><td class="num">92,522</td></tr>
+</tbody></table></div>
+<p>Chart the label as published and credit reporting appears to collapse to zero in 2024 &mdash; the
+year it tripled. August 2023 carries both labels at once, so a naive total double-counts it.</p>
+<p>The credit card family moved in both directions: &ldquo;Credit card&rdquo; and &ldquo;Prepaid
+card&rdquo; were merged in 2017, then split apart again in 2023. A split cannot be undone &mdash; the
+2017&ndash;2023 rows never recorded which half they belong to &mdash; so all three collapse to the
+union label. Mapping to the coarser category is the only direction that does not invent
+information.</p>
+<p>Two labels are deliberately left unmapped. &ldquo;Consumer Loan&rdquo; retired in 2017 with no
+clean successor; mapping it to &ldquo;Vehicle loan or lease&rdquo; would move 31,559 complaints into
+a category they may not belong to.</p>"""),
+            ("What the data says", """
+<ul>
+<li><strong>What you complain about predicts the outcome better than who you complain about.</strong>
+Credit card and checking-account complaints close with money about <strong>16%</strong> of the time.
+Credit reporting complaints do so <strong>0.05%</strong> of the time &mdash; roughly 1 in 2,000.</li>
+<li><strong>The headline number is an artifact of mix.</strong> Across the file, 1.28% of complaints
+close with money. That figure is almost entirely a statement about credit reporting, which is
+<strong>81.75%</strong> of every complaint filed. Excluding it, the rate is 6.69%.</li>
+<li><strong>&ldquo;The credit bureaus&rdquo; are not one actor.</strong> They take 78% of all
+complaints between them and effectively never pay money &mdash; but TransUnion resolves 59.46% of
+complaints with some form of relief against Experian&rsquo;s 12.42%, on comparable volume and the
+same kinds of complaint.</li>
+<li><strong>Volume rose twelvefold in five years</strong>, from 444,213 in 2020 to 5,442,962 in 2025,
+and essentially all of the growth is credit reporting.</li>
+</ul>"""),
+            ("Two metrics that do not discriminate", """
+<p>Timely response is <strong>99.37%</strong> across 17.9 million complaints, and close to 100% at
+every large company. Response lag has a median <em>and</em> a 90th percentile of <strong>0
+days</strong>: 93.81% of complaints reach the company the same day.</p>
+<p>Neither belongs on a dashboard. A tile that never moves teaches a reader nothing, and building one
+anyway is how a dashboard fills up with numbers nobody acts on. Reporting that a metric does not
+discriminate is a finding, not a failure &mdash; and it is the finding that decides what the
+dashboard should show instead.</p>"""),
+            ("Proving a check can fail", """
+<div class="callout"><p><strong>A check that has never failed is a claim, not a test.</strong></p></div>
+<p>The check this project turns on is <em>&ldquo;no product series dies mid-file and
+resurrects.&rdquo;</em> Run against the <strong>published</strong> labels it returns seven broken
+series &mdash; Credit card and Prepaid card both die in April 2017 and resurrect in August 2023,
+exactly the merge-then-split. Run against the <strong>mapped</strong> labels it returns nothing.</p>
+<p>It does not catch everything, and saying otherwise would be worse than the gap. A one-way rename
+&mdash; like credit reporting, where the old label dies and never returns &mdash; produces no
+resurrection to detect. That case is caught by a different check: any label outside the approved
+vocabulary fails the build. Two checks, two kinds of rename. Two of the seven hits are also false
+positives from sparsity, where a category has so few complaints that ordinary empty months look like
+a gap.</p>"""),
+            ("What the first build got wrong", """
+<p>The first version declared foreign keys from the fact table to all four dimensions. That costs
+four index lookups per row, and on 17.9 million rows the insert ran for <strong>two and a half hours
+without finishing</strong>. It also mapped the response categories with an <code>UPDATE</code> over
+every row after loading them, rewriting the whole table to set three columns.</p>
+<p>Both are now done differently: no foreign keys during the load &mdash; the validation suite checks
+for orphan keys directly, catching the same defect without paying for it on every row &mdash; and the
+mapping is applied in the insert. The same build now takes <strong>762 seconds</strong>.</p>"""),
+            ("Honest scope", """
+<ul>
+<li>One row per complaint, not per consumer. The same person filing twice is two rows, and the file
+gives no way to link them.</li>
+<li><strong>Complaint counts are not normalised.</strong> A company with more customers receives more
+complaints, and this file carries no customer or account counts. Every company comparison here is a
+rate.</li>
+<li>Relief is the company&rsquo;s own characterisation of the outcome; the amount is not published.</li>
+<li>A complaint is not a finding of fault. The CFPB does not verify the allegations.</li>
+<li>Company rows require 500+ complaints; below that a single case moves the rate by points.</li>
+</ul>"""),
+        ],
+    },
 ]
 
 
