@@ -78,7 +78,7 @@ def shell(title, desc, body, depth=0, path="", ld=None):
 <meta property="og:image" content="{SITE_URL}/assets/og-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Sai Harika Gade, Research Data Analyst. 237 automated checks, 1,047 of 1,047 injected HL7 faults detected, 3 repositories that run from a clean clone.">
+<meta property="og:image:alt" content="Sai Harika Gade, Research Data Analyst. 302 automated checks, 1,047 of 1,047 injected HL7 faults detected, 5 repositories that run from a clean clone.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title}">
 <meta name="twitter:description" content="{desc}">
@@ -543,6 +543,98 @@ rate.</li>
 </ul>"""),
         ],
     },
+    {
+        "slug": "population-health-survey-analytics",
+        "repo": "population-health-survey-analytics",
+        "name": "Population Health Survey Analytics",
+        "sub": "457,670 CDC survey respondents, estimated twice &mdash; once respecting the "
+               "complex sampling design and once ignoring it. The gap is the finding.",
+        "chips": [("R", True), ("survey package", False), ("Complex survey design", False),
+                  ("CDC BRFSS", False), ("SAS", False)],
+        "metrics": [("457,670", "real respondents"),
+                    ("41", "validation checks"),
+                    ("+2.8 / &minus;1.9 pp", "design effect, opposite directions")],
+        "img": "design_effect_by_state.png",
+        "caption": "Each point is one of 53 jurisdictions: unweighted estimate against "
+                   "survey-weighted. The line is where the sampling design makes no difference.",
+        "chart_caption": "The same two questions, estimated two ways. Ignoring the design "
+                         "understates one measure and overstates the other.",
+        "tagline": "Treat a stratified, clustered, raked national survey as a simple random sample "
+                   "and you do not get a slightly wrong answer. You get one that is wrong in a "
+                   "direction you cannot predict.",
+        "sections": [
+            ("Why the weights exist", """
+<div class="callout"><p><strong>BRFSS deliberately oversamples some groups. The weight restores each
+respondent&rsquo;s share of the adult population &mdash; so unweighted numbers describe the people
+who answered the phone, and weighted numbers describe the country.</strong></p></div>
+<div class="table-scroll"><table>
+<thead><tr><th>Measure</th><th class="num">Unweighted</th><th class="num">Weighted (95% CI)</th><th class="num">Gap</th></tr></thead>
+<tbody>
+<tr><td>Could not see a doctor in the past 12 months due to cost</td><td class="num">9.5095%</td><td class="num"><strong>12.3338%</strong> (12.11&ndash;12.56)</td><td class="num"><strong>+2.82 pp</strong></td></tr>
+<tr><td>Ever told they have diabetes</td><td class="num">14.8911%</td><td class="num"><strong>12.9807%</strong> (12.76&ndash;13.20)</td><td class="num"><strong>&minus;1.91 pp</strong></td></tr>
+</tbody></table></div>
+<p><strong>The two move in opposite directions</strong>, which is the whole point. Ignoring the design
+understates one measure and overstates the other, so there is no correction factor and no safe rule of
+thumb &mdash; the direction depends on how a measure correlates with who was oversampled. A single
+measure would have suggested a tidy bias. Two show there is not one.</p>"""),
+            ("It changes what a reader concludes", """
+<div class="table-scroll"><table>
+<thead><tr><th></th><th class="num">Cost barrier</th><th class="num">Diabetes</th></tr></thead>
+<tbody>
+<tr><td>Median absolute rank shift (of 53)</td><td class="num">5.0 places</td><td class="num">6.0 places</td></tr>
+<tr><td>Jurisdictions moving 10+ places</td><td class="num">8</td><td class="num">16</td></tr>
+<tr><td>Largest single move</td><td class="num">Pennsylvania, &minus;18</td><td class="num"><strong>Nevada, +28</strong></td></tr>
+<tr><td>Largest difference</td><td class="num">Nevada, 4.35 pp</td><td class="num">Guam, 6.63 pp</td></tr>
+</tbody></table></div>
+<p><strong>Mississippi makes it concrete.</strong> On diabetes the state reads <strong>16.10% and
+20th</strong> unweighted, and <strong>15.71% and 6th</strong> weighted &mdash; same file, same year,
+a fourteen-place difference in where it sits. A state health department reading the unweighted table
+would draw a different conclusion about where it stands than the data supports.</p>"""),
+            ("Three decisions that carry the estimate", """
+<p><strong><code>nest = TRUE</code>, and the reason is counter-intuitive.</strong> BRFSS numbers its
+primary sampling units only <em>within</em> a stratum, so <strong>25,800 of 43,913</strong> PSU
+identifiers appear in more than one. Without nesting, the software treats same-numbered units in
+different strata as a single cluster: the point estimate still looks fine while the variance is
+wrong. A validation check asserts the identifiers really do repeat, so the flag stays justified
+rather than copied from a tutorial.</p>
+<p><strong>One design per jurisdiction, not <code>svyby</code>.</strong> Subsetting a 457,670-row,
+43,913-unit design 53 times per measure ran past 25 minutes. Building a design per jurisdiction is
+<strong>exact, not an approximation</strong>, because no stratum crosses a jurisdiction boundary
+&mdash; which is itself one of the checks &mdash; and the step takes <strong>11 seconds</strong>.</p>
+<p><strong>7 and 9 leave the denominator.</strong> &ldquo;Don&rsquo;t know&rdquo; and
+&ldquo;refused&rdquo; appear on nearly every BRFSS question, and folding them into &ldquo;no&rdquo;
+is the most common way to understate a prevalence. Diabetes additionally drops &ldquo;yes, but only
+during pregnancy&rdquo; and &ldquo;pre-diabetes or borderline&rdquo; &mdash; neither is a yes and
+neither is a no.</p>"""),
+            ("41 checks, two of which matter most", """
+<p>A survey estimate is the kind of number nobody can eyeball. 12.3% and 9.5% look equally
+plausible, and the difference between them is whether the design was declared correctly. So the
+checks are not decoration: they are the only thing standing between a correct figure and a
+confident wrong one.</p>
+<ul>
+<li><strong>The 53 jurisdictions re-weight back to the national figure.</strong> Re-weighting each
+state estimate by its share of total weight reproduces the national number exactly. If the
+per-jurisdiction shortcut were ever wrong, this is where it would surface.</li>
+<li><strong>Weighting materially changes the estimate.</strong> This asserts the project&rsquo;s own
+premise. If weighting ever stopped mattering there would be nothing here to report, and the build
+should say so rather than publish an empty finding.</li>
+</ul>"""),
+            ("Honest scope", """
+<ul>
+<li><strong>The SAS half is written and has not been run.</strong> It needs a SAS OnDemand account.
+Until the reconciliation passes, this is an R project with a SAS program beside it, not a
+cross-validated one &mdash; and the repository says so rather than implying otherwise.</li>
+<li>Self-reported. BRFSS asks; it does not measure. &ldquo;Ever told they have diabetes&rdquo; is a
+question about diagnosis and recall.</li>
+<li>Landline and cellular adults only. People without phones, in prisons, or in nursing homes are
+out of frame entirely, and weighting cannot fix coverage.</li>
+<li>Two measures, chosen because the design pushes them in opposite directions. They are not a
+health profile of the country.</li>
+<li>No risk adjustment. Comparing two jurisdictions compares their populations as they are, not
+like with like.</li>
+</ul>"""),
+        ],
+    },
 ]
 
 
@@ -550,10 +642,10 @@ rate.</li>
 # Home page
 # ==========================================================================
 STATS = [
-    ("261", "automated checks across four repositories"),
+    ("302", "automated checks across five repositories"),
     ("1,047<em>/1,047</em>", "injected HL7 faults detected"),
     ("32 GB <em>&rarr;</em> &lt;1 GB", "memory cut on a production research pipeline"),
-    ("4", "repositories that run from a clean clone"),
+    ("5", "repositories that run from a clean clone"),
 ]
 
 EXPERIENCE = [
@@ -719,10 +811,10 @@ def home():
                     <p class="hero__role">Research Data Analyst</p>
                     <p class="hero__lede">
                         I build data pipelines and the validation suites that decide whether
-                        their numbers can be trusted &mdash; three on healthcare data, one on 17.9
-                        million real consumer complaints. Four projects below; each one runs end to
-                        end from a clean clone, and each one found a real defect while I was
-                        building it.
+                        their numbers can be trusted &mdash; three on healthcare data, two on
+                        federal public files covering 18 million consumer complaints and 457,670
+                        survey respondents. Five projects below; each one runs end to end from a
+                        clean clone, and each one found a real defect while I was building it.
                     </p>
                     <div class="hero__cta">
                         <a class="btn btn--primary" href="#work">See the work</a>
@@ -771,11 +863,11 @@ def home():
         <div class="wrap">
             <header class="section-head reveal">
                 <p class="eyebrow">Selected work</p>
-                <h2>Four projects, built to be run</h2>
+                <h2>Five projects, built to be run</h2>
                 <p class="lede">
-                    Not screenshots of dashboards. Each repository builds its own warehouse
-                    &mdash; three from a seeded generator, one from a federal public file it
-                    downloads &mdash; validates itself, and fails the build if a check does not pass.
+                    Not screenshots of dashboards. Each repository builds its own analysis
+                    &mdash; three from a seeded generator, two from federal public files they
+                    download &mdash; validates itself, and fails the build if a check does not pass.
                 </p>
             </header>
             <div class="work">

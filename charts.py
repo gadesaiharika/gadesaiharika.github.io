@@ -359,11 +359,80 @@ def complaint_relief(n=8):
     return "".join(out)
 
 
+# ==========================================================================
+# 5. BRFSS — what the survey design does to a prevalence estimate
+# ==========================================================================
+def survey_design_effect():
+    """Two bars per measure: the same question, estimated two ways.
+
+    The story is that the pair of arrows point in opposite directions. One
+    measure is understated by ignoring the survey design and the other is
+    overstated, so there is no correction factor to apply.
+    """
+    rows = _read("population-health-survey-analytics", "measure_summary.csv")
+    short = {"cost_barrier": "Could not afford a doctor", "diabetes": "Diagnosed diabetes"}
+
+    pad_l, pad_r, pad_t = 150, 86, 26
+    bar_h, bar_gap, group_gap = 22, 6, 20
+    vb_w = 600
+    vb_h = pad_t + len(rows) * (2 * bar_h + bar_gap + group_gap) + 18
+    span = vb_w - pad_l - pad_r
+    top = max(max(float(r["pct_unweighted"]), float(r["pct_weighted"])) for r in rows)
+    scale = span / (top * 1.18)
+
+    out = [_open(vb_w, vb_h, "Survey design effect on two prevalence estimates",
+                 "Ignoring the complex survey design understates the cost barrier by 2.8 "
+                 "percentage points and overstates diabetes by 1.9.")]
+
+    y = pad_t
+    out.append(f'<line x1="{pad_l}" y1="{pad_t - 8}" x2="{pad_l}" y2="{vb_h - 24}" '
+               f'stroke="var(--chart-line, #d8d7d0)" stroke-width="1"/>')
+
+    for r in rows:
+        unw, wtd = float(r["pct_unweighted"]), float(r["pct_weighted"])
+        diff = wtd - unw
+        label = short.get(r["measure"], r["measure"])
+
+        out.append(f'<text x="{pad_l - 12}" y="{y + bar_h - 5}" text-anchor="end" '
+                   f'class="c-lbl">{_esc(label)}</text>')
+
+        for value, kind in ((unw, "unweighted"), (wtd, "weighted")):
+            w = max(value * scale, 2)
+            # The weighted figure is the correct one, so it carries the colour;
+            # the unweighted bar is the mistake being shown.
+            col = ("var(--chart-1, #2a78d6)" if kind == "weighted"
+                   else "var(--chart-muted, #9aa5b1)")
+            out.append(
+                f'<rect x="{pad_l + 1}" y="{y + 3}" width="{w:.1f}" height="{bar_h - 6}" '
+                f'rx="2" fill="{col}"/>'
+                f'<text x="{pad_l + w + 8:.1f}" y="{y + bar_h - 6}" class="c-val">'
+                f'{value:.2f}%</text>')
+            if kind == "unweighted":
+                out.append(f'<text x="{pad_l + 7}" y="{y + bar_h - 6}" class="c-cap" '
+                           f'fill="#ffffff">unweighted</text>')
+            else:
+                out.append(f'<text x="{pad_l + 7}" y="{y + bar_h - 6}" class="c-cap" '
+                           f'fill="#ffffff">weighted</text>')
+            y += bar_h + (bar_gap if kind == "unweighted" else 0)
+
+        sign = "+" if diff > 0 else "\u2212"
+        out.append(f'<text x="{vb_w - pad_r + 46}" y="{y - 10}" text-anchor="end" '
+                   f'class="c-val">{sign}{abs(diff):.2f} pp</text>')
+        y += group_gap
+
+    out.append(f'<text x="{pad_l}" y="{vb_h - 5}" class="c-cap">'
+               f'BRFSS 2024, 457,670 respondents &#183; weighting moves the two the opposite way'
+               f'</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
 CHARTS = {
     "hl7-interface-monitor": hl7_interfaces,
     "hrrp-readmission-analytics": hrrp_cohorts,
     "revenue-cycle-denials": denial_pareto,
     "complaint-resolution-analytics": complaint_relief,
+    "population-health-survey-analytics": survey_design_effect,
 }
 
 
