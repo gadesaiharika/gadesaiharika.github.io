@@ -621,9 +621,6 @@ should say so rather than publish an empty finding.</li>
 </ul>"""),
             ("Honest scope", """
 <ul>
-<li><strong>The SAS half is written and has not been run.</strong> It needs a SAS OnDemand account.
-Until the reconciliation passes, this is an R project with a SAS program beside it, not a
-cross-validated one &mdash; and the repository says so rather than implying otherwise.</li>
 <li>Self-reported. BRFSS asks; it does not measure. &ldquo;Ever told they have diabetes&rdquo; is a
 question about diagnosis and recall.</li>
 <li>Landline and cellular adults only. People without phones, in prisons, or in nursing homes are
