@@ -547,13 +547,13 @@ rate.</li>
         "slug": "population-health-survey-analytics",
         "repo": "population-health-survey-analytics",
         "name": "Population Health Survey Analytics",
-        "sub": "457,670 CDC survey respondents, estimated twice &mdash; once respecting the "
-               "complex sampling design and once ignoring it. The gap is the finding.",
-        "chips": [("R", True), ("survey package", False), ("Complex survey design", False),
-                  ("CDC BRFSS", False), ("SAS", False)],
+        "sub": "457,670 CDC survey respondents, estimated twice for the design effect and twice "
+               "again in R and SAS, which agree on all 108 estimates.",
+        "chips": [("R", True), ("SAS", True), ("survey package", False),
+                  ("Complex survey design", False), ("CDC BRFSS", False)],
         "metrics": [("457,670", "real respondents"),
                     ("41", "validation checks"),
-                    ("+2.8 / &minus;1.9 pp", "design effect, opposite directions")],
+                    ("108 / 108", "R and SAS estimates agreeing")],
         "img": "design_effect_by_state.png",
         "caption": "Each point is one of 53 jurisdictions: unweighted estimate against "
                    "survey-weighted. The line is where the sampling design makes no difference.",
@@ -619,6 +619,24 @@ per-jurisdiction shortcut were ever wrong, this is where it would surface.</li>
 premise. If weighting ever stopped mattering there would be nothing here to report, and the build
 should say so rather than publish an empty finding.</li>
 </ul>"""),
+            ("Two languages, one answer", """
+<div class="callout"><p><strong>The same analysis was written twice &mdash; once in R with the
+<code>survey</code> package, once in SAS with <code>PROC SURVEYFREQ</code> &mdash; each declaring the
+sampling design independently, both reading the same 1 GB transport file.</strong></p></div>
+<pre><code>  measure                   R          SAS   difference
+  cost_barrier        12.3338      12.3338     8.23e-11  agrees
+  diabetes            12.9807      12.9807    -3.34e-10  agrees
+
+  state estimates: 106 of 106 agree  (largest difference 4.93e-10 pp)</code></pre>
+<p><strong>108 of 108 estimates agree to machine precision.</strong> The tolerance was set at 0.01
+percentage points to absorb the different degrees-of-freedom conventions the two tools use for
+confidence bounds; nothing came close to needing it.</p>
+<p>Extending the comparison past the two national figures is the part that matters. A single number
+can agree by luck, with two mistakes cancelling. A hundred and six state estimates cannot.</p>
+<p>The two tools fail in different places, which is what makes the check worth running:
+<code>PROC SURVEYFREQ</code> nests clusters inside strata automatically, so SAS has no equivalent of
+R&rsquo;s <code>nest = TRUE</code> to forget &mdash; while SAS will happily treat &ldquo;don&rsquo;t
+know&rdquo; codes as ordinary values if the recode is sloppy.</p>"""),
             ("Honest scope", """
 <ul>
 <li>Self-reported. BRFSS asks; it does not measure. &ldquo;Ever told they have diabetes&rdquo; is a

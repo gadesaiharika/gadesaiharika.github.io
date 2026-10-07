@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Population Health Survey Analytics &middot; Sai Harika Gade</title>
-<meta name="description" content="457,670 CDC survey respondents, estimated twice &mdash; once respecting the complex sampling design and once ignoring it. The gap is the finding.">
+<meta name="description" content="457,670 CDC survey respondents, estimated twice for the design effect and twice again in R and SAS, which agree on all 108 estimates.">
 <link rel="canonical" href="https://gadesaiharika.github.io/work/population-health-survey-analytics.html">
 <meta property="og:title" content="Population Health Survey Analytics &middot; Sai Harika Gade">
-<meta property="og:description" content="457,670 CDC survey respondents, estimated twice &mdash; once respecting the complex sampling design and once ignoring it. The gap is the finding.">
+<meta property="og:description" content="457,670 CDC survey respondents, estimated twice for the design effect and twice again in R and SAS, which agree on all 108 estimates.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://gadesaiharika.github.io/work/population-health-survey-analytics.html">
 <meta property="og:site_name" content="Sai Harika Gade">
@@ -17,7 +17,7 @@
 <meta property="og:image:alt" content="Sai Harika Gade, Research Data Analyst. 302 automated checks, 1,047 of 1,047 injected HL7 faults detected, 5 repositories that run from a clean clone.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Population Health Survey Analytics &middot; Sai Harika Gade">
-<meta name="twitter:description" content="457,670 CDC survey respondents, estimated twice &mdash; once respecting the complex sampling design and once ignoring it. The gap is the finding.">
+<meta name="twitter:description" content="457,670 CDC survey respondents, estimated twice for the design effect and twice again in R and SAS, which agree on all 108 estimates.">
 <meta name="twitter:image" content="https://gadesaiharika.github.io/assets/og-card.png">
 <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
@@ -72,7 +72,7 @@
             </a>
             <p class="eyebrow">Case study</p>
             <h1>Population Health Survey Analytics</h1>
-            <p class="lede" style="font-size:var(--step-1)">457,670 CDC survey respondents, estimated twice &mdash; once respecting the complex sampling design and once ignoring it. The gap is the finding.</p>
+            <p class="lede" style="font-size:var(--step-1)">457,670 CDC survey respondents, estimated twice for the design effect and twice again in R and SAS, which agree on all 108 estimates.</p>
             <div class="case__links" style="margin-top:1.8rem">
                 <a class="btn btn--primary btn--sm" href="https://github.com/gadesaiharika/population-health-survey-analytics" target="_blank" rel="noopener">
                     View source
@@ -94,8 +94,8 @@
                 <div class="stat__label">validation checks</div>
             </div>
             <div class="stat">
-                <div class="stat__value">+2.8 / &minus;1.9 pp</div>
-                <div class="stat__label">design effect, opposite directions</div>
+                <div class="stat__value">108 / 108</div>
+                <div class="stat__label">R and SAS estimates agreeing</div>
             </div>
         </div>
     </div>
@@ -163,11 +163,26 @@ per-jurisdiction shortcut were ever wrong, this is where it would surface.</li>
 premise. If weighting ever stopped mattering there would be nothing here to report, and the build
 should say so rather than publish an empty finding.</li>
 </ul>
+<h2>Two languages, one answer</h2>
+<div class="callout"><p><strong>The same analysis was written twice &mdash; once in R with the
+<code>survey</code> package, once in SAS with <code>PROC SURVEYFREQ</code> &mdash; each declaring the
+sampling design independently, both reading the same 1 GB transport file.</strong></p></div>
+<pre><code>  measure                   R          SAS   difference
+  cost_barrier        12.3338      12.3338     8.23e-11  agrees
+  diabetes            12.9807      12.9807    -3.34e-10  agrees
+
+  state estimates: 106 of 106 agree  (largest difference 4.93e-10 pp)</code></pre>
+<p><strong>108 of 108 estimates agree to machine precision.</strong> The tolerance was set at 0.01
+percentage points to absorb the different degrees-of-freedom conventions the two tools use for
+confidence bounds; nothing came close to needing it.</p>
+<p>Extending the comparison past the two national figures is the part that matters. A single number
+can agree by luck, with two mistakes cancelling. A hundred and six state estimates cannot.</p>
+<p>The two tools fail in different places, which is what makes the check worth running:
+<code>PROC SURVEYFREQ</code> nests clusters inside strata automatically, so SAS has no equivalent of
+R&rsquo;s <code>nest = TRUE</code> to forget &mdash; while SAS will happily treat &ldquo;don&rsquo;t
+know&rdquo; codes as ordinary values if the recode is sloppy.</p>
 <h2>Honest scope</h2>
 <ul>
-<li><strong>The SAS half is written and has not been run.</strong> It needs a SAS OnDemand account.
-Until the reconciliation passes, this is an R project with a SAS program beside it, not a
-cross-validated one &mdash; and the repository says so rather than implying otherwise.</li>
 <li>Self-reported. BRFSS asks; it does not measure. &ldquo;Ever told they have diabetes&rdquo; is a
 question about diagnosis and recall.</li>
 <li>Landline and cellular adults only. People without phones, in prisons, or in nursing homes are
